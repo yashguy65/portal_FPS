@@ -1,23 +1,24 @@
 extends CharacterBody3D
 
-const RUN_SPEED = 10.0
-const WALK_SPEED = 5.0
+const RUN_SPEED = 12
+const WALK_SPEED = 8
 const JUMP_VELOCITY = 4.5
 const SENSITIVITY = 0.003
-const delta = 0.05
 
-# Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = 9.8
 var speed
 
+#signal
+signal player_hit
+
 #bullets
-var bullet = load("res://Scenes/bullet.tscn")
+var bullet = load("res://Scenes/Bullet.tscn")
 var instance
 
 @onready var head = $Head
 @onready var camera = $Head/Camera3D
 @onready var shoot_animation = $Head/Camera3D/Gun/RootNode/AnimationPlayer
-@onready var gun_barrel = $Head/Camera3D/Gun/RayCast3D
+@onready var gun_barrel = $Head/Camera3D/Gun/RootNode/RayCast3D
 
 
 func _ready():
@@ -58,7 +59,6 @@ func _physics_process(delta):
 			get_parent().add_child(instance)
 
 	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
 	var input_dir = Input.get_vector("left", "right", "forward", "backward")
 	var direction = (head.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if is_on_floor():
@@ -71,5 +71,9 @@ func _physics_process(delta):
 	else:
 		velocity.x = lerp(velocity.x, direction.x * speed, delta * 3.0 )
 		velocity.z = lerp(velocity.z, direction.z * speed, delta * 3.0 )
-
+	
+	
 	move_and_slide()
+	
+func hit():
+	emit_signal("player_hit")

@@ -1,5 +1,44 @@
-[gd_scene load_steps=2 format=3 uid="uid://dhudi52kk631y"]
+[gd_scene load_steps=4 format=3 uid="uid://dhudi52kk631y"]
 
 [ext_resource type="PackedScene" uid="uid://co2lofp3dn8uf" path="res://Models/Gun/Assault Rifle.glb" id="1_l2lqy"]
 
-[node name="Root Scene" instance=ExtResource("1_l2lqy")]
+[sub_resource type="Animation" id="Animation_smr11"]
+resource_name = "Shoot"
+length = 0.1
+step = 0.01
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AssaultRifle2_1:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.01, 0.1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0.0347593, 0), Vector3(0, 0.035, 0.05), Vector3(0, 0.0347593, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_2clw0"]
+_data = {
+"Shoot": SubResource("Animation_smr11")
+}
+
+[node name="Gun" instance=ExtResource("1_l2lqy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.035, 0)
+
+[node name="RootNode" parent="." index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.671261, 0)
+
+[node name="AssaultRifle2_1" parent="RootNode" index="0"]
+transform = Transform3D(-4.37114e-06, -100, -4.37114e-06, 0, -4.37114e-06, 100, -100, 4.37114e-06, 1.91069e-13, 0, 0.0347593, 0)
+cast_shadow = 0
+
+[node name="RayCast3D" type="RayCast3D" parent="RootNode" index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00718653, 0.642606, -3.88507)
+target_position = Vector3(0, 0, -1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="RootNode" index="2"]
+libraries = {
+"": SubResource("AnimationLibrary_2clw0")
+}
