@@ -1,26 +1,34 @@
 extends Node3D
 
-@onready var damage_indicator =  $UI/ColorRect
+@onready var damage_indicator =  $UI/HitRect
 @onready var navigation_region = $Map/NavigationRegion3D
+@onready var black_screen = $UI/BlackScreen
 @onready var spawns = $Map/Spawns
+@onready var crosshair = $UI/Crosshair
 
-var future_soldier = load("res://Scenes/future_soldier.tscn")
+var turret = load("res://Scenes/Turret.tscn")
+var destroyer = load("res://Scenes/Destroyer.tscn")
 var instance
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	pass#crosshair.position.x = get_viewport().size.x / 2 - 32
+	#crosshair.position.y = get_viewport().size.y / 2 - 32
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	pass
 
-
 func _on_player_player_hit():
 	damage_indicator.visible = true
 	await get_tree().create_timer(0.2).timeout
 	damage_indicator.visible = false
 
-#instance = future_soldier.instantiate()
+#instance = turret.instantiate()
 #instance.position = helperMazeFn
+
+
+func _on_player_player_dead():
+	pass#black_screen.visible = true
+	#make game over scene

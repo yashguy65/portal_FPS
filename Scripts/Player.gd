@@ -1,15 +1,17 @@
 extends CharacterBody3D
 
-const RUN_SPEED = 12
-const WALK_SPEED = 8
-const JUMP_VELOCITY = 4.5
-const SENSITIVITY = 0.003
+const RUN_SPEED := 12.0
+const WALK_SPEED := 8.0
+const JUMP_VELOCITY := 4.5
+const SENSITIVITY := 0.003
 
-var gravity = 9.8
-var speed
+var HP := 100
+var gravity := 9.8
+var speed : float
 
 #signal
 signal player_hit
+signal player_dead
 
 #bullets
 var bullet = load("res://Scenes/Bullet.tscn")
@@ -77,3 +79,6 @@ func _physics_process(delta):
 	
 func hit():
 	emit_signal("player_hit")
+	HP-=10
+	if HP<=-500:
+		emit_signal("player_dead")

@@ -1,10 +1,11 @@
-[gd_scene load_steps=13 format=3 uid="uid://l3yji6t2u1gr"]
+[gd_scene load_steps=14 format=3 uid="uid://l3yji6t2u1gr"]
 
-[ext_resource type="Script" path="res://Scripts/world.gd" id="1_gkggp"]
-[ext_resource type="Script" path="res://Scripts/Player.gd" id="1_pshd1"]
-[ext_resource type="PackedScene" uid="uid://dhudi52kk631y" path="res://Scenes/Gun.tscn" id="2_fc48i"]
-[ext_resource type="PackedScene" uid="uid://ojmen7b64sn1" path="res://Scenes/future_soldier.tscn" id="4_anyqg"]
-[ext_resource type="Script" path="res://Scripts/future_soldier.gd" id="5_8w6w7"]
+[ext_resource type="Script" path="res://Scripts/World.gd" id="1_tym0h"]
+[ext_resource type="Script" path="res://Scripts/Player.gd" id="2_qj4if"]
+[ext_resource type="PackedScene" uid="uid://dhudi52kk631y" path="res://Scenes/Gun.tscn" id="3_3bviw"]
+[ext_resource type="PackedScene" uid="uid://bms56id7q1i6s" path="res://Scenes/Destroyer.tscn" id="4_7gymc"]
+[ext_resource type="PackedScene" uid="uid://dbqp5qmntilfy" path="res://Scenes/Turret.tscn" id="5_4ub5r"]
+[ext_resource type="Texture2D" uid="uid://d3radhj6uixps" path="res://Textures/Crosshair/crosshair161.png" id="6_wvhx6"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3y4ak"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -27,12 +28,15 @@ polygons = [PackedInt32Array(1, 0, 2), PackedInt32Array(2, 0, 3), PackedInt32Arr
 albedo_color = Color(0.781863, 0.28685, 0.541333, 1)
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_12j7t"]
+radius = 0.75
+height = 4.8
 
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_toabv"]
-points = PackedVector3Array(-0.125207, -0.532801, -0.480507, 0.0227831, 0.47607, 0.498884, 0.169713, 0.559144, 0.464172, 0.231051, -0.803591, 0.320455, 0.40741, 0.651043, -0.243523, -0.482789, 0.594843, 0.0822132, -0.362868, -0.682312, 0.289697, 0.469044, -0.654529, -0.0662713, -0.127444, 0.842701, -0.338103, -0.393435, -0.683942, -0.244717, 0.438255, 0.623309, 0.200849, 0.0841477, 0.977454, 0.114795, -0.0682023, -0.976458, -0.12927, 0.20055, -0.563129, -0.451454, -0.185527, 0.595453, -0.453475, -0.273363, 0.592268, 0.407754, -0.00693649, -0.476823, 0.49966, 0.375821, -0.588614, 0.316955, 0.111579, 0.563059, -0.481177, -0.41725, 0.527866, -0.270497, -0.484546, -0.596972, -0.0665097, -0.279747, 0.908561, 0.0533361, -0.250197, -0.880712, 0.205319, 0.263647, -0.902771, -0.127394, 0.293368, 0.871526, -0.157196, 0.373412, -0.526319, -0.328246, 0.499663, 0.476641, -0.00688856, 0.0531056, 0.875001, 0.324703, -0.154543, -0.590854, 0.465879, -0.0972799, -0.782358, -0.398188, -0.387649, -0.498171, 0.31565, -0.30068, -0.587995, -0.388901)
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_d5oia"]
+radius = 0.73
+height = 4.7
 
 [node name="World" type="Node3D"]
-script = ExtResource("1_gkggp")
+script = ExtResource("1_tym0h")
 
 [node name="Map" type="Node3D" parent="."]
 
@@ -46,24 +50,24 @@ environment = SubResource("Environment_088vp")
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="Map"]
 navigation_mesh = SubResource("NavigationMesh_6ipjk")
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="Map/NavigationRegion3D"]
+[node name="CSGBox3D2" type="CSGBox3D" parent="Map/NavigationRegion3D" groups=["projectile"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.78722, 0.705505, -5.53356)
 use_collision = true
-collision_layer = 4
+collision_layer = 3
 collision_mask = 3
 size = Vector3(0.176881, 3.03372, 15.7118)
 
-[node name="CSGSphere3D" type="CSGSphere3D" parent="Map/NavigationRegion3D"]
+[node name="CSGSphere3D" type="CSGSphere3D" parent="Map/NavigationRegion3D" groups=["projectile"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.08484, 0, -0.592649)
 use_collision = true
-collision_layer = 4
+collision_layer = 3
 collision_mask = 3
 material = SubResource("StandardMaterial3D_lxg13")
 
-[node name="Floor" type="CSGBox3D" parent="Map/NavigationRegion3D"]
+[node name="Floor" type="CSGBox3D" parent="Map/NavigationRegion3D" groups=["projectile"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50.743, -0.45, -55.875)
 use_collision = true
-collision_layer = 4
+collision_layer = 3
 collision_mask = 3
 size = Vector3(153.077, 0.002, 188.001)
 
@@ -71,50 +75,33 @@ size = Vector3(153.077, 0.002, 188.001)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.064476, 0)
 layers = 2
 
-[node name="FutureSoldier" parent="Map/NavigationRegion3D" instance=ExtResource("4_anyqg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.92988, -0.328411, 0)
-collision_layer = 2
-collision_mask = 5
-script = ExtResource("5_8w6w7")
-
-[node name="FutureSoldier2" parent="Map/NavigationRegion3D" instance=ExtResource("4_anyqg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.85977, -0.656822, 0)
-collision_layer = 2
-collision_mask = 5
-script = ExtResource("5_8w6w7")
-
-[node name="FutureSoldier3" parent="Map/NavigationRegion3D" instance=ExtResource("4_anyqg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.7897, -0.985233, 0)
-collision_layer = 2
-collision_mask = 5
-script = ExtResource("5_8w6w7")
-
-[node name="FutureSoldier4" parent="Map/NavigationRegion3D" instance=ExtResource("4_anyqg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.7195, -1.31364, 0)
-collision_layer = 2
-collision_mask = 5
-script = ExtResource("5_8w6w7")
-
-[node name="Player" type="CharacterBody3D" parent="Map/NavigationRegion3D"]
+[node name="Player" type="CharacterBody3D" parent="Map/NavigationRegion3D" groups=["player"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0135589, -0.147188, -0.0197175)
-collision_mask = 6
-script = ExtResource("1_pshd1")
+script = ExtResource("2_qj4if")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Map/NavigationRegion3D/Player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.170116, 0.418887, -0.175439)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.170116, 2.10211, -0.175439)
 mesh = SubResource("CapsuleMesh_12j7t")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/NavigationRegion3D/Player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.170116, 0.418887, -0.175439)
-shape = SubResource("ConvexPolygonShape3D_toabv")
 
 [node name="Head" type="Node3D" parent="Map/NavigationRegion3D/Player"]
 
 [node name="Camera3D" type="Camera3D" parent="Map/NavigationRegion3D/Player/Head"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.99877, 0.0830126)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.03755, 0.0830126)
 
-[node name="Gun" parent="Map/NavigationRegion3D/Player/Head/Camera3D" instance=ExtResource("2_fc48i")]
-transform = Transform3D(0.239924, 0, 0.0702588, 0.00783289, 0.248441, -0.0267483, -0.0698208, 0.0278716, 0.238429, 0.322167, -0.248334, -0.401797)
+[node name="Gun" parent="Map/NavigationRegion3D/Player/Head/Camera3D" instance=ExtResource("3_3bviw")]
+transform = Transform3D(0.248806, -0.00527947, 0.0238234, 0.00783289, 0.248441, -0.0267483, -0.0231101, 0.027367, 0.247421, 0.339471, -0.248334, -0.401797)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/NavigationRegion3D/Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.170116, 2.13522, -0.175439)
+shape = SubResource("CapsuleShape3D_d5oia")
+
+[node name="Turret" parent="Map/NavigationRegion3D" instance=ExtResource("5_4ub5r")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.3608, 0, 0)
+collision_layer = 3
+collision_mask = 3
+
+[node name="Destroyer" parent="Map/NavigationRegion3D" instance=ExtResource("4_7gymc")]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, -3.72483, 0, 0)
 
 [node name="Spawns" type="Node3D" parent="Map"]
 
@@ -124,13 +111,29 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="ColorRect" type="ColorRect" parent="UI"]
+[node name="HitRect" type="ColorRect" parent="UI"]
 visible = false
 layout_mode = 0
-offset_left = -102.0
-offset_top = -60.0
-offset_right = 945.0
-offset_bottom = 661.0
+offset_left = -178.0
+offset_top = -124.0
+offset_right = 1279.0
+offset_bottom = 771.0
 color = Color(0.878431, 0.121569, 0, 0.129412)
 
+[node name="BlackScreen" type="ColorRect" parent="UI"]
+visible = false
+layout_mode = 0
+offset_left = -140.0
+offset_top = -87.0
+offset_right = 1300.0
+offset_bottom = 757.0
+color = Color(0, 0, 0, 1)
+
+[node name="Crosshair" type="TextureRect" parent="UI"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("6_wvhx6")
+
+[connection signal="player_dead" from="Map/NavigationRegion3D/Player" to="." method="_on_player_player_dead"]
 [connection signal="player_hit" from="Map/NavigationRegion3D/Player" to="." method="_on_player_player_hit"]

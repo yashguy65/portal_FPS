@@ -1,6 +1,6 @@
 extends Node3D
 
-const SPEED = 70.0
+@export var SPEED := 70.0
 
 @onready var mesh = $Node3D/MeshInstance3D
 @onready var ray = $RayCast3D
@@ -28,8 +28,10 @@ func _process(delta):
 		node_mesh.visible = false
 		particles.emitting = true
 		ray.enabled = false 
-		#if ray.get_collider().is_in_group("mortal_enemy")
-			#ray.get_collider().hit()
+		if ray.get_collider().is_in_group("enemy") or ray.get_collider().is_in_group("player"):
+			ray.get_collider().hit()
+		if ray.get_collider().is_in_group("projectile"):
+			ray.enabled = false
 		await get_tree().create_timer(1.0).timeout
 		queue_free()
 

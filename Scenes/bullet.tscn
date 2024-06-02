@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://Scripts/Bullet.gd" id="1_dy4tq"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f5h24"]
-albedo_color = Color(0.780687, 0, 0.0104157, 1)
+albedo_color = Color(0.417056, 0.22, 0.0227892, 1)
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_740wd"]
 direction = Vector3(0, 0, 1)
@@ -14,8 +14,9 @@ initial_velocity_max = 5.0
 size = Vector3(0.04, 0.04, 0.04)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_77ouv"]
-albedo_color = Color(0, 0, 0, 1)
+albedo_color = Color(0.215686, 0, 0, 1)
 metallic = 1.0
+metallic_specular = 0.0
 emission_enabled = true
 emission = Color(1, 1, 1, 1)
 emission_energy_multiplier = 0.01
@@ -28,14 +29,17 @@ script = ExtResource("1_dy4tq")
 
 [node name="RayCast3D" type="RayCast3D" parent="."]
 target_position = Vector3(0, 0, -0.6)
-collision_mask = 3
+collision_mask = 2
 collide_with_areas = true
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.563585)
 material_override = SubResource("StandardMaterial3D_f5h24")
+transparency = 0.36
 emitting = false
-lifetime = 0.21
+amount = 5
+amount_ratio = 0.2545
+lifetime = 0.5
 one_shot = true
 explosiveness = 1.0
 process_material = SubResource("ParticleProcessMaterial_740wd")

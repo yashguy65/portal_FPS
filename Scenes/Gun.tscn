@@ -1,6 +1,22 @@
-[gd_scene load_steps=4 format=3 uid="uid://dhudi52kk631y"]
+[gd_scene load_steps=8 format=3 uid="uid://dhudi52kk631y"]
 
 [ext_resource type="PackedScene" uid="uid://co2lofp3dn8uf" path="res://Models/Gun/Assault Rifle.glb" id="1_l2lqy"]
+[ext_resource type="Texture2D" uid="uid://c78cns00c6c4s" path="res://Textures/MuzzleFlash/m_5.png" id="2_crrj5"]
+
+[sub_resource type="Animation" id="Animation_io4ra"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MuzzleFlash:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0.634251, -3.75109)]
+}
 
 [sub_resource type="Animation" id="Animation_smr11"]
 resource_name = "Shoot"
@@ -13,16 +29,64 @@ tracks/0/path = NodePath("AssaultRifle2_1:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.01, 0.1),
+"times": PackedFloat32Array(0, 0.01, 0.06, 0.1),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0.0347593, 0), Vector3(0, 0.035, 0.05), Vector3(0, 0.035, -0.005), Vector3(0, 0.0347593, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MuzzleFlash:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.02, 0.06, 0.09, 0.1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0.6, 0.6, 0.6), Vector3(0.4, 0.4, 0.4), Vector3(0.15, 0.15, 0.15), Vector3(0, 0, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("MuzzleFlash:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0.634251, -3.74181), Vector3(0, 0.673277, -3.59409), Vector3(0, 0.634251, -3.74181), Vector3(0, 0.634251, -3.74181), Vector3(0, 0.634251, -3.74181), Vector3(0, 0.634251, -3.74181), Vector3(0, 0.634251, -3.74181), Vector3(0, 0.634251, -3.74181), Vector3(0, 0.634251, -3.74181), Vector3(0, 0.634251, -3.74181), Vector3(0, 0.634251, -3.75109)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("AssaultRifle2_1:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.01, 0.06),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector3(0, 0.0347593, 0), Vector3(0, 0.035, 0.05), Vector3(0, 0.0347593, 0)]
+"values": [Vector3(-1.5708, 1.5708, 0), Vector3(-1.53589, 1.5708, 0), Vector3(-1.58825, 1.5708, 0)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_2clw0"]
 _data = {
+"RESET": SubResource("Animation_io4ra"),
 "Shoot": SubResource("Animation_smr11")
 }
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_7sr3m"]
+flip_faces = true
+orientation = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mnyjc"]
+transparency = 1
+albedo_texture = ExtResource("2_crrj5")
+emission_enabled = true
+emission_energy_multiplier = 3.0
+emission_texture = ExtResource("2_crrj5")
 
 [node name="Gun" instance=ExtResource("1_l2lqy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.035, 0)
@@ -31,7 +95,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.035, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.671261, 0)
 
 [node name="AssaultRifle2_1" parent="RootNode" index="0"]
-transform = Transform3D(-4.37114e-06, -100, -4.37114e-06, 0, -4.37114e-06, 100, -100, 4.37114e-06, 1.91069e-13, 0, 0.0347593, 0)
+transform = Transform3D(-1.62907e-05, -99.9848, -1.74516, -1.52566e-07, -1.74516, 99.9848, -100, 1.62909e-05, 1.31756e-07, 0, 0.0347593, 0)
 cast_shadow = 0
 
 [node name="RayCast3D" type="RayCast3D" parent="RootNode" index="1"]
@@ -42,3 +106,8 @@ target_position = Vector3(0, 0, -1)
 libraries = {
 "": SubResource("AnimationLibrary_2clw0")
 }
+
+[node name="MuzzleFlash" type="MeshInstance3D" parent="RootNode" index="3"]
+transform = Transform3D(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.634251, -3.75109)
+mesh = SubResource("PlaneMesh_7sr3m")
+surface_material_override/0 = SubResource("StandardMaterial3D_mnyjc")
