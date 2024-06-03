@@ -20,7 +20,7 @@ var instance
 @onready var head = $Head
 @onready var camera = $Head/Camera3D
 @onready var shoot_animation = $Head/Camera3D/Gun/RootNode/AnimationPlayer
-@onready var gun_barrel = $Head/Camera3D/Gun/RootNode/RayCast3D
+@onready var gun_barrel = $Head/Camera3D/RayCast3D
 
 
 func _ready():
@@ -78,6 +78,7 @@ func _physics_process(delta):
 	move_and_slide()
 	
 func hit():
+	print("HIT PLAYER")
 	emit_signal("player_hit")
 	HP-=10
 	if HP<=-500:

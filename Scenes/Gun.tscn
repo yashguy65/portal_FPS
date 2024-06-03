@@ -95,19 +95,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.035, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.671261, 0)
 
 [node name="AssaultRifle2_1" parent="RootNode" index="0"]
-transform = Transform3D(-1.62907e-05, -99.9848, -1.74516, -1.52566e-07, -1.74516, 99.9848, -100, 1.62909e-05, 1.31756e-07, 0, 0.0347593, 0)
+transform = Transform3D(-2.26471e-05, -99.9848, -1.74516, -2.63511e-07, -1.74516, 99.9848, -100, 2.26482e-05, 1.31756e-07, 0, 0.0347593, 0)
 cast_shadow = 0
 
-[node name="RayCast3D" type="RayCast3D" parent="RootNode" index="1"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00718653, 0.642606, -3.88507)
-target_position = Vector3(0, 0, -1)
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="RootNode" index="2"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="RootNode" index="1"]
 libraries = {
 "": SubResource("AnimationLibrary_2clw0")
 }
 
-[node name="MuzzleFlash" type="MeshInstance3D" parent="RootNode" index="3"]
+[node name="MuzzleFlash" type="MeshInstance3D" parent="RootNode" index="2"]
 transform = Transform3D(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.634251, -3.75109)
 mesh = SubResource("PlaneMesh_7sr3m")
 surface_material_override/0 = SubResource("StandardMaterial3D_mnyjc")

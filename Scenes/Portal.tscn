@@ -1,0 +1,49 @@
+[gd_scene load_steps=6 format=3 uid="uid://chuu1cjlrp7p7"]
+
+[ext_resource type="Material" uid="uid://40450anje0gn" path="res://Models/StencilMat.tres" id="1_lae3s"]
+[ext_resource type="Script" path="res://Scripts/Portal.gd" id="2_bmqrf"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_w2st2"]
+radius = 2.0
+height = 10.0
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_jmqvv"]
+radius = 2.924
+height = 10.696
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vuvin"]
+radius = 2.80613
+height = 10.5259
+
+[node name="Portal" type="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.74411, 0)
+layers = 16
+cast_shadow = 0
+mesh = SubResource("CapsuleMesh_w2st2")
+skeleton = NodePath("../Player")
+surface_material_override/0 = ExtResource("1_lae3s")
+script = ExtResource("2_bmqrf")
+current = true
+other_portal_path = NodePath("../Portal2")
+
+[node name="Helper" type="Node3D" parent="."]
+
+[node name="Inside" type="MeshInstance3D" parent="."]
+layers = 16
+cast_shadow = 0
+mesh = SubResource("CapsuleMesh_jmqvv")
+skeleton = NodePath("../Player")
+surface_material_override/0 = ExtResource("1_lae3s")
+
+[node name="Teleport" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Teleport"]
+shape = SubResource("CapsuleShape3D_vuvin")
+
+[node name="inside" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="inside"]
+shape = SubResource("CapsuleShape3D_vuvin")
+
+[connection signal="body_entered" from="Teleport" to="." method="_on_teleport_body_entered"]
+[connection signal="body_exited" from="inside" to="." method="_on_inside_body_exited"]

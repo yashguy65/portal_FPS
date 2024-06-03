@@ -42,7 +42,7 @@ func _physics_process(delta):
 		"Attack2":
 			timeDelta+=delta
 			if timeDelta>=0.5:
-				look_at(Vector3(player.global_position.x, global_position.y, player.global_position.z), Vector3.UP)
+				look_at(Vector3(player.global_position.x, global_position.y-1, player.global_position.z), Vector3.UP)
 				instance = bullet.instantiate()
 				instance.position = barrel.global_position
 				instance.transform.basis = barrel.global_transform.basis

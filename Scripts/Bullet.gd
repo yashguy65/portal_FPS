@@ -1,6 +1,6 @@
 extends Node3D
 
-@export var SPEED := 70.0
+@export var SPEED := 90.0
 
 @onready var mesh = $Node3D/MeshInstance3D
 @onready var ray = $RayCast3D
@@ -28,7 +28,9 @@ func _process(delta):
 		node_mesh.visible = false
 		particles.emitting = true
 		ray.enabled = false 
-		if ray.get_collider().is_in_group("enemy") or ray.get_collider().is_in_group("player"):
+		if ray.get_collider():
+			print(ray.get_collider())
+		if ray.get_collider().has_method("hit"):
 			ray.get_collider().hit()
 		if ray.get_collider().is_in_group("projectile"):
 			ray.enabled = false
