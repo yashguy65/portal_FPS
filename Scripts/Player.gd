@@ -5,13 +5,13 @@ const WALK_SPEED := 8.0
 const JUMP_VELOCITY := 4.5
 const SENSITIVITY := 0.003
 
-var HP := 100
+var HP := 100.0
 var gravity := 9.8
 var speed : float
 
 #signal
-signal player_hit
 signal player_dead
+signal screen_shake
 
 #bullets
 var bullet = load("res://Scenes/Bullet.tscn")
@@ -77,9 +77,9 @@ func _physics_process(delta):
 	
 	move_and_slide()
 	
-func hit():
-	print("HIT PLAYER")
-	emit_signal("player_hit")
-	HP-=10
+func hit(damage=20.0):
+	emit_signal("screen_shake")
+	HP-=damage
+	print(HP)
 	if HP<=-500:
 		emit_signal("player_dead")

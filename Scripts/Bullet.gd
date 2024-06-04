@@ -28,13 +28,12 @@ func _process(delta):
 		node_mesh.visible = false
 		particles.emitting = true
 		ray.enabled = false 
-		if ray.get_collider():
-			print(ray.get_collider())
+		print(ray.get_collider())
 		if ray.get_collider().has_method("hit"):
 			ray.get_collider().hit()
 		if ray.get_collider().is_in_group("projectile"):
 			ray.enabled = false
-		await get_tree().create_timer(1.0).timeout
+		await get_tree().create_timer(3.0).timeout
 		queue_free()
 
 func _on_timer_timeout():

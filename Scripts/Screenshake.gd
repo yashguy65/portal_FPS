@@ -8,6 +8,7 @@ extends Node3D
 
 @export var noise : FastNoiseLite
 
+
 const noise_speed = 50
 var trauma := 0.0
 var time := 0.0
@@ -32,6 +33,11 @@ func get_shake_intensity() -> float:
 
 func get_noise_from_seed(_seed : int) -> float:
 	return noise.get_noise_1d(time * noise_speed)
+	
+func _on_player_screen_shake():
+	trauma = clamp(trauma+0.5, 0.0, 1.0)
+	print("player screen shake")
 
-func _on_player_player_hit():
-	trauma = clamp(trauma + 0.1, 0.0, 1.0)
+func _on_destroyer_screen_shake():
+	trauma = clamp(trauma+0.5, 0.0, 1.0)
+	print("destroyer screen shake")

@@ -5,6 +5,7 @@ class_name CamPortal
 @export var current = false
 @export var other_portal_path: NodePath
 @onready var helper = $Helper
+@onready var frame = $Frame
 
 var other_portal: CamPortal = null
 
@@ -16,6 +17,7 @@ func _ready():
 
 func _process(delta):
 	if current:
+		frame.visible = true
 		var main_cam = get_viewport().get_camera_3d()
 		helper.global_transform = main_cam.global_transform
 		other_portal.helper.transform = helper.transform
@@ -27,6 +29,7 @@ func _process(delta):
 		if not visible:
 			visible = true
 	else:
+		frame.visible = false
 		if visible:
 			visible=false
 
@@ -37,11 +40,11 @@ func _on_teleport_body_entered(body):
 	if not current:
 		current = true
 		visible = true
+		frame.visible = true
 	if current and $Inside.visible:
 		helper.global_transform = body.global_transform
 		other_portal.helper.transform = helper.transform
 		body.global_transform = other_portal.helper.global_transform
-		
 		current = false
 		$Inside.visible = false
 		

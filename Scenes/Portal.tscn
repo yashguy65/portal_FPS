@@ -1,11 +1,12 @@
-[gd_scene load_steps=6 format=3 uid="uid://chuu1cjlrp7p7"]
+[gd_scene load_steps=10 format=3 uid="uid://chuu1cjlrp7p7"]
 
 [ext_resource type="Material" uid="uid://40450anje0gn" path="res://Models/StencilMat.tres" id="1_lae3s"]
 [ext_resource type="Script" path="res://Scripts/Portal.gd" id="2_bmqrf"]
+[ext_resource type="Script" path="res://Scripts/StencilBlocker.gd" id="3_bclf6"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_w2st2"]
-radius = 2.0
-height = 10.0
+radius = 2.924
+height = 10.696
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_jmqvv"]
 radius = 2.924
@@ -14,6 +15,17 @@ height = 10.696
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vuvin"]
 radius = 2.80613
 height = 10.5259
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_53r0v"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_87m23"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ipblg"]
+material = SubResource("StandardMaterial3D_87m23")
+radius = 3.3
+height = 12.0
 
 [node name="Portal" type="MeshInstance3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.74411, 0)
@@ -44,6 +56,21 @@ shape = SubResource("CapsuleShape3D_vuvin")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="inside"]
 shape = SubResource("CapsuleShape3D_vuvin")
+
+[node name="Frame" type="Node3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Frame"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.768033)
+material_override = SubResource("StandardMaterial3D_53r0v")
+mesh = SubResource("CapsuleMesh_ipblg")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Frame"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.768033)
+layers = 16
+mesh = SubResource("CapsuleMesh_ipblg")
+skeleton = NodePath("../..")
+script = ExtResource("3_bclf6")
 
 [connection signal="body_entered" from="Teleport" to="." method="_on_teleport_body_entered"]
 [connection signal="body_exited" from="inside" to="." method="_on_inside_body_exited"]

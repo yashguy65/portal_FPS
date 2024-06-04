@@ -8,6 +8,8 @@ var player = null
 var timeDelta := 0.0
 const ShootFrequency := 0.5
 
+signal screen_shake
+
 var state_machine
 var bullet = load("res://Scenes/Bullet.tscn")
 var instance
@@ -42,12 +44,13 @@ func _physics_process(delta):
 		"Attack2":
 			timeDelta+=delta
 			if timeDelta>=0.5:
-				look_at(Vector3(player.global_position.x, global_position.y-1, player.global_position.z), Vector3.UP)
+				look_at(Vector3(player.global_position.x, player.global_position.y-1, player.global_position.z), Vector3.UP)
 				instance = bullet.instantiate()
 				instance.position = barrel.global_position
 				instance.transform.basis = barrel.global_transform.basis
 				get_parent().add_child(instance)
 				timeDelta=0.0
+			player.hit(0.2)
 			
 		"End":
 			queue_free()
@@ -84,9 +87,7 @@ func _on_Timer_timeout():
 
 func _on_area_3d_body_part_hit(dam):
 	HP -= dam
+	emit_signal("screen_shake")
 	if HP<=0:
 		animation_tree.set("parameters/conditions/dead", true)
-	
-func pause_anim():
-	pass
 	
