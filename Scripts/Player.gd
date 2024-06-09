@@ -1,12 +1,12 @@
 extends CharacterBody3D
 
-const RUN_SPEED := 12.0
+const RUN_SPEED := 80
 const WALK_SPEED := 8.0
 const JUMP_VELOCITY := 4.5
 const SENSITIVITY := 0.003
 
 var HP := 100.0
-var gravity := 9.8
+var gravity := 0#9.8
 var speed : float
 
 #signal
@@ -25,6 +25,9 @@ var instance
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	#var maze_generator = get_parent().get_node("MazeGen")
+	#if maze_generator:
+	#	maze_generator.connect("player_start", self, "_on_maze_gen_player_start")
 	
 func _unhandled_input(event):
 	if event is InputEventMouseMotion:
@@ -83,3 +86,7 @@ func hit(damage=20.0):
 	print(HP)
 	if HP<=-500:
 		emit_signal("player_dead")
+
+
+func _on_maze_gen_player_start(initial: Vector3) -> void:	
+	global_transform.origin = initial

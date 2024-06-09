@@ -1,10 +1,10 @@
 extends Node3D
 
-@onready var damage_indicator =  $UI/HitRect
 @onready var navigation_region = $Map/NavigationRegion3D
 @onready var black_screen = $UI/BlackScreen
 @onready var spawns = $Map/Spawns
 @onready var crosshair = $UI/Crosshair
+
 
 var turret = load("res://Scenes/Turret.tscn")
 var destroyer = load("res://Scenes/Destroyer.tscn")
@@ -20,14 +20,9 @@ func _ready():
 func _process(delta):
 	pass
 
-func _on_player_player_hit():
-	damage_indicator.visible = true
-	await get_tree().create_timer(0.2).timeout
-	damage_indicator.visible = false
 
 #instance = turret.instantiate()
 #instance.position = helperMazeFn
-
 
 func _on_player_player_dead():
 	pass#black_screen.visible = true

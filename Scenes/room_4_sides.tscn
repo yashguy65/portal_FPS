@@ -1,0 +1,73 @@
+[gd_scene load_steps=9 format=3 uid="uid://bnyo50e07x16x"]
+
+[ext_resource type="PackedScene" uid="uid://b25dcuvjxe2vi" path="res://Models/Room/room_4sides.glb" id="1_8ygim"]
+[ext_resource type="Texture2D" uid="uid://budhi7a1oc17v" path="res://Models/Room/room_4sides_MetalPlates017A_1K-PNG_Color.png" id="2_5gnx5"]
+[ext_resource type="Texture2D" uid="uid://d026l3sc0hbql" path="res://Models/Room/room_4sides_MetalPlates017A_1K-PNG_AmbientOcclusion-MetalPlates017A_1K-PNG_Roughness-MetalPlates017A_1K-PNG_Metalness.png" id="3_eccas"]
+[ext_resource type="Texture2D" uid="uid://c12w4p4j42swv" path="res://Models/Room/room_4sides_MetalPlates017A_1K-PNG_NormalDX.png" id="4_uiime"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w5ufd"]
+resource_name = "Bedroom"
+cull_mode = 2
+albedo_texture = ExtResource("2_5gnx5")
+metallic = 1.0
+metallic_texture = ExtResource("3_eccas")
+metallic_texture_channel = 2
+roughness_texture = ExtResource("3_eccas")
+roughness_texture_channel = 1
+normal_enabled = true
+normal_texture = ExtResource("4_uiime")
+ao_enabled = true
+ao_texture = ExtResource("3_eccas")
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_1gxyr"]
+_surfaces = [{
+"aabb": AABB(-150.403, -149.428, -164.961, 300.805, 298.856, 329.922),
+"format": 34896613377,
+"index_count": 36,
+"index_data": PackedByteArray(4, 0, 2, 0, 0, 0, 4, 0, 6, 0, 2, 0, 4, 0, 7, 0, 3, 0, 4, 0, 0, 0, 7, 0, 6, 0, 3, 0, 5, 0, 6, 0, 4, 0, 3, 0, 7, 0, 5, 0, 3, 0, 7, 0, 1, 0, 5, 0, 0, 0, 1, 0, 7, 0, 0, 0, 2, 0, 1, 0, 2, 0, 5, 0, 1, 0, 2, 0, 6, 0, 5, 0),
+"name": "Bedroom",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray(255, 255, 0, 0, 254, 255, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0, 255, 255, 254, 255, 254, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 254, 255, 0, 0, 0, 0, 255, 255, 0, 0, 0, 0, 0, 0, 254, 255, 254, 255, 0, 0, 255, 255, 0, 0, 0, 0, 0, 0)
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_c6vyj"]
+resource_name = "room_4sides_Object_0"
+_surfaces = [{
+"aabb": AABB(-150.403, -149.428, -164.961, 300.805, 298.856, 329.922),
+"attribute_data": PackedByteArray(255, 159, 255, 255, 255, 95, 255, 127, 255, 31, 255, 127, 255, 95, 0, 0, 255, 223, 255, 127, 255, 95, 255, 63, 255, 159, 255, 191, 255, 159, 255, 127, 255, 31, 255, 63, 255, 159, 255, 63, 255, 159, 255, 191, 255, 159, 255, 63, 255, 95, 255, 255, 255, 95, 255, 191, 255, 95, 255, 63, 255, 159, 0, 0, 255, 223, 255, 63, 255, 159, 255, 127, 255, 95, 255, 191, 255, 159, 255, 63, 255, 95, 255, 127, 255, 95, 255, 63, 255, 159, 255, 127, 255, 95, 255, 127),
+"format": 34896613399,
+"index_count": 36,
+"index_data": PackedByteArray(12, 0, 6, 0, 0, 0, 12, 0, 18, 0, 6, 0, 13, 0, 22, 0, 10, 0, 13, 0, 1, 0, 22, 0, 20, 0, 11, 0, 17, 0, 20, 0, 14, 0, 11, 0, 21, 0, 15, 0, 9, 0, 21, 0, 3, 0, 15, 0, 2, 0, 5, 0, 23, 0, 2, 0, 8, 0, 5, 0, 7, 0, 16, 0, 4, 0, 7, 0, 19, 0, 16, 0),
+"material": SubResource("StandardMaterial3D_w5ufd"),
+"name": "Bedroom",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 24,
+"vertex_data": PackedByteArray(255, 255, 0, 0, 254, 255, 0, 128, 255, 255, 0, 0, 254, 255, 84, 213, 255, 255, 0, 0, 254, 255, 255, 191, 255, 255, 255, 255, 0, 0, 255, 255, 255, 255, 255, 255, 0, 0, 84, 213, 255, 255, 255, 255, 0, 0, 255, 191, 255, 255, 254, 255, 254, 255, 0, 128, 255, 255, 254, 255, 254, 255, 84, 213, 255, 255, 254, 255, 254, 255, 255, 191, 0, 0, 0, 0, 0, 0, 255, 255, 0, 0, 0, 0, 0, 0, 84, 213, 0, 0, 0, 0, 0, 0, 255, 255, 0, 0, 0, 0, 254, 255, 0, 128, 0, 0, 0, 0, 254, 255, 84, 213, 0, 0, 0, 0, 254, 255, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 84, 213, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 254, 255, 254, 255, 0, 128, 0, 0, 254, 255, 254, 255, 84, 213, 0, 0, 254, 255, 254, 255, 255, 255, 255, 255, 0, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0, 84, 213, 255, 255, 0, 0, 0, 0, 255, 191, 255, 127, 255, 255, 84, 85, 84, 85, 255, 127, 0, 0, 255, 127, 255, 255, 84, 213, 170, 42, 255, 127, 0, 0, 255, 127, 255, 255, 84, 213, 170, 42, 255, 127, 0, 0, 255, 127, 255, 255, 84, 85, 84, 85, 255, 63, 255, 127, 255, 127, 255, 255, 84, 85, 84, 85, 255, 63, 255, 127, 255, 127, 255, 255, 84, 213, 170, 42, 255, 63, 255, 127, 255, 127, 255, 255, 84, 213, 170, 42, 255, 63, 255, 127, 255, 127, 255, 255, 84, 85, 84, 85, 255, 127, 0, 0)
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_1gxyr")
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_crmnr"]
+data = PackedVector3Array(-150.403, -149.428, 164.956, 150.402, 149.423, 164.956, 150.402, -149.428, 164.956, -150.403, -149.428, 164.956, -150.403, 149.423, 164.956, 150.402, 149.423, 164.956, -150.403, -149.428, 164.956, 150.402, -149.428, -164.961, -150.403, -149.428, -164.961, -150.403, -149.428, 164.956, 150.402, -149.428, 164.956, 150.402, -149.428, -164.961, -150.403, 149.423, 164.956, -150.403, -149.428, -164.961, -150.403, 149.428, -164.961, -150.403, 149.423, 164.956, -150.403, -149.428, 164.956, -150.403, -149.428, -164.961, 150.402, -149.428, -164.961, -150.403, 149.428, -164.961, -150.403, -149.428, -164.961, 150.402, -149.428, -164.961, 150.402, 149.428, -164.961, -150.403, 149.428, -164.961, 150.402, -149.428, 164.956, 150.402, 149.428, -164.961, 150.402, -149.428, -164.961, 150.402, -149.428, 164.956, 150.402, 149.423, 164.956, 150.402, 149.428, -164.961, 150.402, 149.423, 164.956, -150.403, 149.428, -164.961, 150.402, 149.428, -164.961, 150.402, 149.423, 164.956, -150.403, 149.423, 164.956, -150.403, 149.428, -164.961)
+backface_collision = true
+
+[node name="room_4sides" instance=ExtResource("1_8ygim")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+
+[node name="Sketchfab_model" parent="." index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Object_2" parent="Sketchfab_model/8bd9b59414a443dca951aa93db096a8e_obj_cleaner_materialmerger_gle" index="0"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("ArrayMesh_c6vyj")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Sketchfab_model/8bd9b59414a443dca951aa93db096a8e_obj_cleaner_materialmerger_gle/Object_2" index="0"]
+collision_layer = 3
+collision_mask = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Sketchfab_model/8bd9b59414a443dca951aa93db096a8e_obj_cleaner_materialmerger_gle/Object_2/StaticBody3D" index="0"]
+shape = SubResource("ConcavePolygonShape3D_crmnr")

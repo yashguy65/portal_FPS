@@ -13,7 +13,7 @@ var instance
 var timeDelta := 0.0
 
 const ShootFrequency := 0.5
-const ShootSpeed := 26.0
+const ShootSpeed := 23.0
 const gravity := 9.8
 const RANGE := 7
 
