@@ -2,7 +2,6 @@ extends Node3D
 
 @onready var navigation_region = $Map/NavigationRegion3D
 @onready var black_screen = $UI/BlackScreen
-@onready var spawns = $Map/Spawns
 @onready var crosshair = $UI/Crosshair
 
 
@@ -27,3 +26,7 @@ func _process(delta):
 func _on_player_player_dead():
 	pass#black_screen.visible = true
 	#make game over scene
+
+
+func _on_maze_gen_victory():
+	pass # you win screen

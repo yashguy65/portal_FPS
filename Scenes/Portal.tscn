@@ -1,37 +1,43 @@
-[gd_scene load_steps=10 format=3 uid="uid://chuu1cjlrp7p7"]
+[gd_scene load_steps=12 format=3 uid="uid://chuu1cjlrp7p7"]
 
 [ext_resource type="Material" uid="uid://40450anje0gn" path="res://Models/StencilMat.tres" id="1_lae3s"]
 [ext_resource type="Script" path="res://Scripts/Portal.gd" id="2_bmqrf"]
 [ext_resource type="Script" path="res://Scripts/StencilBlocker.gd" id="3_bclf6"]
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_w2st2"]
-radius = 2.924
-height = 10.696
+[sub_resource type="SphereMesh" id="SphereMesh_fw25p"]
+radius = 4.0
+height = 8.0
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_jmqvv"]
-radius = 2.924
-height = 10.696
+[sub_resource type="SphereMesh" id="SphereMesh_1rebt"]
+radius = 4.0
+height = 8.0
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vuvin"]
-radius = 2.80613
-height = 10.5259
+[sub_resource type="SphereShape3D" id="SphereShape3D_6mclb"]
+radius = 3.9
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_qcb5y"]
+radius = 3.8
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_53r0v"]
 albedo_color = Color(0, 0, 0, 1)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_87m23"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ddbb3"]
 albedo_color = Color(0, 0, 0, 1)
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_ipblg"]
-material = SubResource("StandardMaterial3D_87m23")
-radius = 3.3
-height = 12.0
+[sub_resource type="SphereMesh" id="SphereMesh_ayd6n"]
+material = SubResource("StandardMaterial3D_ddbb3")
+radius = 4.3
+height = 8.6
+
+[sub_resource type="SphereMesh" id="SphereMesh_u5xtf"]
+radius = 4.3
+height = 8.6
 
 [node name="Portal" type="MeshInstance3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.74411, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.28569, 0)
 layers = 16
 cast_shadow = 0
-mesh = SubResource("CapsuleMesh_w2st2")
+mesh = SubResource("SphereMesh_fw25p")
 skeleton = NodePath("../Player")
 surface_material_override/0 = ExtResource("1_lae3s")
 script = ExtResource("2_bmqrf")
@@ -43,33 +49,33 @@ other_portal_path = NodePath("../Portal2")
 [node name="Inside" type="MeshInstance3D" parent="."]
 layers = 16
 cast_shadow = 0
-mesh = SubResource("CapsuleMesh_jmqvv")
+mesh = SubResource("SphereMesh_1rebt")
 skeleton = NodePath("../Player")
 surface_material_override/0 = ExtResource("1_lae3s")
 
 [node name="Teleport" type="Area3D" parent="."]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Teleport"]
-shape = SubResource("CapsuleShape3D_vuvin")
+shape = SubResource("SphereShape3D_6mclb")
 
 [node name="inside" type="Area3D" parent="."]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="inside"]
-shape = SubResource("CapsuleShape3D_vuvin")
+shape = SubResource("SphereShape3D_qcb5y")
 
 [node name="Frame" type="Node3D" parent="."]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Frame"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.768033)
 material_override = SubResource("StandardMaterial3D_53r0v")
-mesh = SubResource("CapsuleMesh_ipblg")
+mesh = SubResource("SphereMesh_ayd6n")
 skeleton = NodePath("../..")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="Frame"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.768033)
 visible = false
 layers = 16
-mesh = SubResource("CapsuleMesh_ipblg")
+mesh = SubResource("SphereMesh_u5xtf")
 skeleton = NodePath("../..")
 script = ExtResource("3_bclf6")
 

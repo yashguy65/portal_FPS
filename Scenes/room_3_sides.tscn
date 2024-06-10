@@ -7,7 +7,7 @@ data = PackedVector3Array(-150.403, -149.428, 164.956, 150.403, 149.424, 164.956
 backface_collision = true
 
 [node name="room_3sides" instance=ExtResource("1_4vxyq")]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, -1, 0)
 
 [node name="Object_2" parent="Sketchfab_model/8bd9b59414a443dca951aa93db096a8e_obj_cleaner_materialmerger_gle" index="0"]
 layers = 17
@@ -18,4 +18,3 @@ collision_mask = 3
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Sketchfab_model/8bd9b59414a443dca951aa93db096a8e_obj_cleaner_materialmerger_gle/Object_2/StaticBody3D" index="0"]
 shape = SubResource("ConcavePolygonShape3D_jns0r")
-disabled = true

@@ -15,10 +15,10 @@ var timeDelta := 0.0
 const ShootFrequency := 0.5
 const ShootSpeed := 23.0
 const gravity := 9.8
-const RANGE := 7
+const RANGE := 23
 
 func _ready():
-	player = get_node(player_path)
+	player = get_node_or_null(player_path)
 
 func _physics_process(delta):
 	

@@ -11,7 +11,7 @@ var other_portal: CamPortal = null
 
 func _ready():
 	if not other_portal_path.is_empty():
-		other_portal = get_node(other_portal_path)
+		other_portal = get_node_or_null(other_portal_path)
 	if current:
 		$Inside.visible = true
 

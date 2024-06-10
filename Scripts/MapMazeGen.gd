@@ -1,76 +1,57 @@
 extends Node3D
 
+signal player_start(initial: Vector3)
+signal victory
+
 @export var testing : bool = false
+@export var nav_path : NodePath
 
 var room1_scene = preload("res://Scenes/room_1_side.tscn")
 var room2_adj_scene = preload("res://Scenes/room_2_sides_adjacent.tscn")
 var room2_opp_scene = preload("res://Scenes/room_2_sides_opposite.tscn")
 var room3_scene = preload("res://Scenes/room_3_sides.tscn")
 var room4_scene = preload("res://Scenes/room_4_sides.tscn")
+var room0_scene = preload("res://Scenes/room_0_sides.tscn")
 
-var initial := Vector3(0,0,0)
-var maze_size := Vector2(20,20)
-var room_size := Vector3(30,30,30)
+var destroyer = preload("res://Scenes/Destroyer.tscn")
+var turret = preload("res://Scenes/Turret.tscn")
+var portal = preload("res://Scenes/Portal.tscn")
 
-signal player_start
+var maze_size := Vector2(20, 20)
+var room_size := Vector3(30, 30, 30)
 
 var grid: Array = []
 var unvisited: Array = []
 var hard: bool # for when easy and hard mode are added
 const grid_side := 20
 var rng = RandomNumberGenerator.new()
-var visited_cells : int 
-@export var number_of_portal_pairs : int = 4
-
-#----------------------------------------KEY------------------------------------------------
-#BACKTRACK SOLUTION BORDER      WALLS
-# 0123		4567	8/9/10/11	12/13/14/15
-# 0000		0000	0000		0000
-# WSEN		WSEN	WSEN		WSEN
-
-#NOW ONLY WALLS
-#-------------------------------------------------------------------------------------------
-
-func printGrid(arr: Array) -> void:
-	for row in arr:
-		for ele in row:
-			var lol = ele.slice(12,16)
-			print(lol)
-			
-		
-func checkNeighboursWithWallsIntact(coords: Vector2) -> Array:
-	var possible: Array = [Vector2(0,1), Vector2(1,0), Vector2(0,-1), Vector2(-1,0)]
-	var list: Array = []
-	for i in possible:
-		var neighbour_coords = coords + i
-		if unvisited.has(neighbour_coords) and \
-		   grid[neighbour_coords.x][neighbour_coords.y][12] == 1 and \
-		   grid[neighbour_coords.x][neighbour_coords.y][13] == 1 and \
-		   grid[neighbour_coords.x][neighbour_coords.y][14] == 1 and \
-		   grid[neighbour_coords.x][neighbour_coords.y][15] == 1:
-			list.append(neighbour_coords)
-	return list 
+var visited_cells: int
+@export var number_of_portal_pairs: int = 4
+@export var number_of_enemies : int = 8
 
 func _ready():
 	grid.resize(grid_side)
 	for i in range(grid_side):
 		grid[i] = []
 		for j in range(grid_side):
-			grid[i].append([0,0,0,0,  0,0,0,0,  0,0,0,0,  1,1,1,1]) 
-			unvisited.append(Vector2(i,j))
-	#START COORDINATES    
-	var x : int = rng.randi_range(0,grid_side-1)
-	var y : int = rng.randi_range(0, grid_side-1)
-	var current_cell := Vector2(x,y)
-	initial = Vector3(x * room_size.x, 15, y * room_size.z)
-	player_start.emit(initial)
+			grid[i].append([0,0,0,0,  0,0,0,0,  0,0,0,0,  1,1,1,1])
+			unvisited.append(Vector2(i, j))
+
+	# START COORDINATES
+	var x: int = 0
+	var y: int = 0
+	var current_cell := Vector2(x, y)
 	visited_cells = 1
 	var backtrack: Array = []
 	unvisited.erase(current_cell)  # Mark starting cell as visited
+
+	# Calculate initial position for player
+	var initial_position = Vector3(x * room_size.x, 0, y * room_size.z)
+
 	while visited_cells < (grid_side * grid_side):
 		var neighbours: Array = checkNeighboursWithWallsIntact(current_cell)
 		if neighbours.size() > 0:
-			var z: int = rng.randi_range(0,neighbours.size()-1)            
+			var z: int = rng.randi_range(0, neighbours.size() - 1)
 			var next_cell = neighbours[z]
 			# Check which walls the neighbour is connected by
 			if next_cell.x == current_cell.x:
@@ -97,16 +78,43 @@ func _ready():
 			else:
 				break
 	if testing:
-		_instantiate_test_rooms()
+		# _instantiate_test_rooms() is commented out since it's not implemented
+		pass
 	else:
 		_instantiate_rooms()
-	printGrid(grid)
+	bake_navigation_mesh(nav_path)
+	_emit_player_start(initial_position)
+	_spawn_enemies()
 
-func get_room_type(cell: Array) ->  PackedScene:
+func checkNeighboursWithWallsIntact(coords: Vector2) -> Array:
+	var possible: Array = [Vector2(0, 1), Vector2(1, 0), Vector2(0, -1), Vector2(-1, 0)]
+	var list: Array = []
+	for i in possible:
+		var neighbour_coords = coords + i
+		if unvisited.has(neighbour_coords) and \
+		   grid[neighbour_coords.x][neighbour_coords.y][12] == 1 and \
+		   grid[neighbour_coords.x][neighbour_coords.y][13] == 1 and \
+		   grid[neighbour_coords.x][neighbour_coords.y][14] == 1 and \
+		   grid[neighbour_coords.x][neighbour_coords.y][15] == 1:
+			list.append(neighbour_coords)
+	return list
+
+func _instantiate_rooms() -> void:
+	for x in range(grid_side):
+		for y in range(grid_side):
+			var room_scene = get_room_type(grid[x][y])
+			var room_instance = room_scene.instantiate()
+			if room_instance is Node3D:
+				room_instance.transform.origin = Vector3(x * room_size.x, 15, y * room_size.z)
+				_apply_rotation(room_instance, grid[x][y])
+			add_child(room_instance)
+
+func get_room_type(cell: Array) -> PackedScene:
 	var walls = cell.slice(12, 16)
 	var wall_count = walls.count(1)
-	
+
 	if wall_count == 4:
+		print("4 WALL ROOM")
 		return room4_scene
 	elif wall_count == 3:
 		return room3_scene
@@ -118,20 +126,9 @@ func get_room_type(cell: Array) ->  PackedScene:
 	elif wall_count == 1:
 		return room1_scene
 	else:
-		print("count0: No walls")
-		return room4_scene
+		print("0 WALL ROOM")
+		return room0_scene
 
-func _instantiate_rooms() -> void:
-	for x in range(grid_side):
-		for y in range(grid_side):
-			var room_scene = get_room_type(grid[x][y])
-			print(room_scene.resource_name)
-			var room_instance = room_scene.instantiate()
-			if room_instance is Node3D:
-				room_instance.transform.origin = Vector3(x * room_size.x, 15, y * room_size.z)
-				_apply_rotation(room_instance, grid[x][y])    
-			add_child(room_instance)
-			
 func _apply_rotation(node: Node3D, cell: Array) -> void:
 	var walls = cell.slice(12, 16)
 	var rotation_degrees = 0
@@ -172,15 +169,115 @@ func _apply_rotation(node: Node3D, cell: Array) -> void:
 		elif walls[3] == 0:
 			rotation_degrees = 90	# N
 
-	node.rotate_y(deg_to_rad(rotation_degrees)) 
+	node.rotate_y(deg_to_rad(rotation_degrees))
+
+func _emit_player_start(position: Vector3) -> void:
+	player_start.emit(position)
+
+func collect_meshes(node: Node, meshes: Array):
+	if node == null:
+		return
+
+	for child in node.get_children():
+		if child is MeshInstance3D:
+			meshes.append(child)
+		collect_meshes(child, meshes)
+
+# Function to visualize the navigation mesh
+func visualize_navigation_mesh(nav_region: NavigationRegion3D) -> void:
+	if not nav_region:
+		print("Error: NavigationRegion3D node not found!")
+		return
+
+	var nav_mesh = nav_region.navigation_mesh
+	if not nav_mesh:
+		print("Error: NavigationMesh not found!")
+		return
+
+	# Create a temporary visualization of the navigation mesh
+	var debug_mesh = ImmediateMesh.new()
+	var material = StandardMaterial3D.new()
+	material.albedo_color = Color(0, 1, 0, 0.5)  # Semi-transparent green
+
+	# Add a surface to the ImmediateMesh
+	debug_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES, material)
+
+	# Add the vertices and indices from the navigation mesh
+	var mesh_data_tool = MeshDataTool.new()
+	mesh_data_tool.create_from_surface(nav_mesh, 0)
 	
+	for i in range(mesh_data_tool.get_face_count()):
+		var a = mesh_data_tool.get_face_vertex(i, 0)
+		var b = mesh_data_tool.get_face_vertex(i, 1)
+		var c = mesh_data_tool.get_face_vertex(i, 2)
+		debug_mesh.surface_add_vertex(a)
+		debug_mesh.surface_add_vertex(b)
+		debug_mesh.surface_add_vertex(c)
+
+	debug_mesh.surface_end()
+
+	var debug_instance = MeshInstance3D.new()
+	debug_instance.mesh = debug_mesh
+	nav_region.add_child(debug_instance)
+
+	print("Navigation mesh visualized.")
+
+# Function to bake the navigation mesh
+func bake_mesh(nav_region: NavigationRegion3D) -> void:
+	nav_region.bake_navigation_mesh()
+	#visualize_navigation_mesh(nav_region)
+	print("Navigation mesh baked.")
+
+# Function to bake the navigation mesh from dynamically instantiated objects
+func bake_navigation_mesh(nav_region_path: NodePath) -> void:
+	var nav_region = get_node(nav_region_path) as NavigationRegion3D
+	if nav_region == null:
+		print("Error: NavigationRegion3D node not found!")
+		return
+
+	var nav_mesh = NavigationMesh.new()
+	var surface_tool = SurfaceTool.new()
+	surface_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+
+	var meshes = []
+	collect_meshes(nav_region, meshes)
+
+	for mesh_instance in meshes:
+		var mesh = mesh_instance.mesh
+		if mesh:
+			for surface in range(mesh.get_surface_count()):
+				var array = mesh.surface_get_arrays(surface)
+				surface_tool.append_from(mesh, surface, Transform3D())
+
+	var combined_mesh = surface_tool.commit()
+
+	# Create the navigation mesh from the combined mesh
+	nav_mesh.create_from_mesh(combined_mesh)
+
+	# Set the NavigationMesh to the NavigationRegion3D and bake it
+	nav_region.navigation_mesh = nav_mesh
+	call_deferred("bake_mesh", nav_region)
+
+
 func _instantiate_test_rooms():
 	var room_scene: Array = [room2_adj_scene, room2_adj_scene]
 	for i in range(len(room_scene)):
 		var room_instance = room_scene[i].instantiate()                
 		if room_instance:
-			room_instance.transform.origin = Vector3(i * room_size.x, 0, 0*i * room_size.z)
-			if i==1:
+			room_instance.transform.origin = Vector3(i * room_size.x, 0, i * room_size.z)
+			if i == 1:
 				room_instance.rotate_y(deg_to_rad(180))
 	
 		add_child(room_instance)
+
+func _spawn_enemies():
+	for j in [turret, destroyer]:
+		for i in range(number_of_enemies):
+			var x: int = 0
+			var y: int = 0
+			while x == 0 and y == 0:
+				x = rng.randi_range(0, grid_side - 1)
+				y = rng.randi_range(0, grid_side - 1)
+			var enemy = j.instantiate()
+			enemy.transform.origin = Vector3(x * room_size.x + rng.randi_range(0, 10), 0, y * room_size.z + rng.randi_range(0, 10))
+			add_child(enemy)

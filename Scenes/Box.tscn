@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://juwmsrm1bf24"]
+
+[ext_resource type="Script" path="res://Scripts/StencilBlocker.gd" id="1_8odov"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bvdxr"]
+albedo_color = Color(0, 1, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_rw3o1"]
+size = Vector3(0.2, 3.1, 16)
+
+[node name="CSGBox3D2" type="CSGBox3D" groups=["projectile"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.78722, 0.705505, -5.53356)
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(0.176881, 3.03372, 15.7118)
+material = SubResource("StandardMaterial3D_bvdxr")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+visible = false
+layers = 16
+mesh = SubResource("BoxMesh_rw3o1")
+script = ExtResource("1_8odov")

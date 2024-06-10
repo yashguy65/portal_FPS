@@ -22,10 +22,10 @@ var HP := 100
 const SPEED := 4.0
 const gravity := 9.8
 const SIGHT_RANGE := 4
-const TRACK_RANGE := 11
+const TRACK_RANGE := 35
 
 func _ready():
-	player = get_node(player_path)
+	player = get_node_or_null(player_path)
 	state_machine = animation_tree.get("parameters/playback")
 	state_machine.start("Start")
 

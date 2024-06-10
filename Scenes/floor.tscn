@@ -1,0 +1,34 @@
+[gd_scene load_steps=5 format=3 uid="uid://cxa7wkh746kpx"]
+
+[ext_resource type="Script" path="res://Scripts/StencilBlocker.gd" id="1_xf2b6"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dxy0f"]
+albedo_color = Color(1, 0, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4ogn2"]
+size = Vector3(153, 1, 188)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oglck"]
+albedo_color = Color(1, 0, 1, 1)
+
+[node name="Floor" type="CSGBox3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 285, -0.45, 285)
+layers = 3
+use_collision = true
+collision_layer = 3
+collision_mask = 3
+size = Vector3(600, 1, 600)
+material = SubResource("StandardMaterial3D_dxy0f")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." groups=["projectile"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.45, 0)
+layers = 3
+mesh = SubResource("BoxMesh_4ogn2")
+surface_material_override/0 = SubResource("StandardMaterial3D_oglck")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." groups=["projectile"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.45, 0)
+visible = false
+layers = 16
+mesh = SubResource("BoxMesh_4ogn2")
+script = ExtResource("1_xf2b6")
