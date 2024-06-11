@@ -27,7 +27,7 @@ const RANGE := 23
 func _ready():
 	player = get_node_or_null(player_path)
 	var posn_1 := global_transform.origin
-	posn_2 = Vector3(room_size * rng2.randi_range(0, no_of_rooms-1), 0, room_size * rng2.randi_range(0, no_of_rooms-1))
+	posn_2 = Vector3(room_size * rng2.randi_range(0, no_of_rooms-1) + rng2.randi_range(0,5), 0, room_size * rng2.randi_range(0, no_of_rooms-1) + rng2.randi_range(0,5))
 	while posn_2.distance_to(posn_1)<3:
 		posn_2 = Vector3(room_size * rng2.randi_range(0, no_of_rooms-1), 0, room_size * rng2.randi_range(0, no_of_rooms-1))
 	

@@ -3,7 +3,7 @@ extends Node3D
 signal player_start(initial: Vector3)
 signal victory
 
-@export_enum("WITHOUT_WALLS",	"NORMAL",	"PLAYGROUND") var lol
+@export_enum("WITHOUT_WALLS",	"NORMAL",	"PLAYGROUND") var mode
 @export var nav_path : NodePath
 @export var visualize: bool = false
 
@@ -13,6 +13,9 @@ var room2_opp_scene = preload("res://Scenes/room_2_sides_opposite.tscn")
 var room3_scene = preload("res://Scenes/room_3_sides.tscn")
 var room4_scene = preload("res://Scenes/room_4_sides.tscn")
 var room0_scene = preload("res://Scenes/room_0_sides.tscn")
+var portal_pair = preload("res://Scenes/portal_pair.tscn")
+
+@onready var portal_parent: Node3D = $"../PortalParent"
 
 var destroyer = preload("res://Scenes/Destroyer.tscn")
 var turret = preload("res://Scenes/Turret.tscn")
@@ -82,16 +85,17 @@ func _ready():
 				current_cell = backtrack.pop_back()
 			else:
 				break
-	if lol == 2:
+	if mode == 2:
 		_instantiate_test_rooms() 
 		pass
-	elif lol == 1:
+	elif mode == 1:
 		_instantiate_rooms()
-	else: # lol == 0
+	else: # mode == 0
 		_instantiate_empty_rooms()
-	bake_navigation_mesh(nav_path)
 	_emit_player_start(initial_position)
 	_spawn_enemies()
+	_place_portals()
+	bake_navigation_mesh(nav_path)
 
 func checkNeighboursWithWallsIntact(coords: Vector2) -> Array:
 	var possible: Array = [Vector2(0, 1), Vector2(1, 0), Vector2(0, -1), Vector2(-1, 0)]
@@ -178,8 +182,8 @@ func _apply_rotation(node: Node3D, cell: Array) -> void:
 
 	node.rotate_y(deg_to_rad(rotation_degrees))
 
-func _emit_player_start(position: Vector3) -> void:
-	player_start.emit(position)
+func _emit_player_start(posn: Vector3) -> void:
+	player_start.emit(posn)
 
 func collect_meshes(node: Node, meshes: Array):
 	if node == null:
@@ -296,7 +300,38 @@ func _spawn_enemies():
 				x = rng.randi_range(0, grid_side - 1)
 				y = rng.randi_range(0, grid_side - 1)
 			var enemy = j.instantiate()
-			enemy.global_transform.origin = Vector3(x * room_size.x + rng.randi_range(0, 10), 0, y * room_size.z + rng.randi_range(0, 10))
+			add_child(enemy)
+			enemy.global_transform.origin = Vector3(x * room_size.x + rng.randi_range(0, 7), 0, y * room_size.z + rng.randi_range(0, 7))
 			if j==destroyer:
 				enemy.set_scale(Vector3(0.3,0.3,0.3))
-			add_child(enemy)
+			
+			
+func _place_portals():
+	
+	for i in range((number_of_portal_pairs - 1)):  # one pair will be on the ideal path
+		var x: int = 0
+		var y: int = 0
+		var a: int = 0
+		var b: int = 0
+		
+		while x == 0 and y == 0:
+			x = rng.randi_range(0, grid_side - 1)
+			y = rng.randi_range(0, grid_side - 1)
+		
+		while (a == 0 and b == 0) or (a == x and b == y):
+			a = rng.randi_range(0, grid_side - 1)
+			b = rng.randi_range(0, grid_side - 1)
+		
+		var instance = portal_pair.instantiate()
+		add_child(instance)
+		#var instance1 = instance.Portal1
+		#var instance2 = instance.Portal2
+		
+		instance.get_node("Portal1").current = true
+		
+		instance.get_node("Portal1").global_transform.origin = Vector3(x * room_size.x + rng.randi_range(0, 5), 3.286, y * room_size.z + rng.randi_range(0, 5))
+		instance.get_node("Portal2").global_transform.origin = Vector3(a * room_size.x + rng.randi_range(0, 5), 3.286, b * room_size.z + rng.randi_range(0, 5))
+		
+		print("Placed portal pair at", instance.get_node("Portal1").global_transform.origin, "and", instance.get_node("Portal2").global_transform.origin)
+
+		

@@ -10,16 +10,31 @@ class_name CamPortal
 var other_portal: CamPortal = null
 
 func _ready():
+	while (other_portal_path.is_empty()):
+		pass
 	if not other_portal_path.is_empty():
-		other_portal = get_node_or_null(other_portal_path)
+		other_portal = get_node(other_portal_path)
+		if other_portal == null:
+			print("Failed to find other portal at path:", other_portal_path)
+		else:
+			print("Other portal found at path:", other_portal_path)
+	else:
+		print("No other_portal_path set.")
+	
 	if current:
 		$Inside.visible = true
+	print("Path:", self.get_path())
+	print("Other portal path:", other_portal_path)
 
 func _process(delta):
 	if current:
 		frame.visible = true
 		var main_cam = get_viewport().get_camera_3d()
 		helper.global_transform = main_cam.global_transform
+		if other_portal:
+			other_portal.helper.transform = helper.transform
+		else:
+			print("Other portal is null. self: ", self.get_path())
 		other_portal.helper.transform = helper.transform
 		g.portal_camera.global_transform = other_portal.helper.global_transform
 		var diff = global_transform.origin - main_cam.global_transform.origin
@@ -32,7 +47,6 @@ func _process(delta):
 		frame.visible = false
 		if visible:
 			visible=false
-
 
 func _on_teleport_body_entered(body):
 	if not body.is_in_group("player"):
@@ -47,12 +61,13 @@ func _on_teleport_body_entered(body):
 		body.global_transform = other_portal.helper.global_transform
 		current = false
 		$Inside.visible = false
-		
-		
-
 
 func _on_inside_body_exited(body):
 	if not body.is_in_group("player"):
 		return
 	if current and not $Inside.visible:
 		$Inside.visible = true
+		
+func set_other_portal_path(path: NodePath):
+	other_portal_path = path
+	print("Setting other_portal_path:", path)

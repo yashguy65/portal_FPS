@@ -42,7 +42,6 @@ skeleton = NodePath("../Player")
 surface_material_override/0 = ExtResource("1_lae3s")
 script = ExtResource("2_bmqrf")
 current = true
-other_portal_path = NodePath("../Portal2")
 
 [node name="Helper" type="Node3D" parent="."]
 

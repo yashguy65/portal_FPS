@@ -23,13 +23,16 @@ var instance
 @onready var shoot_animation = $Head/Camera3D/Gun/RootNode/AnimationPlayer
 @onready var gun_barrel = $Head/Camera3D/RayCast3D
 
+var maze_side = 20
 
 func _ready():
 	global_transform.origin = Vector3(0,20,0)
+	apply_floor_snap()
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	if g.difficulty == 1:
+	if g.difficulty == 1: #easy
 		RUN_SPEED = 20
 		DMG = 8
+		maze_side = 10
 	
 func _unhandled_input(event):
 	if event is InputEventMouseMotion:

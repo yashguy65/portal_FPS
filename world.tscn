@@ -1,17 +1,15 @@
-[gd_scene load_steps=30 format=3 uid="uid://l3yji6t2u1gr"]
+[gd_scene load_steps=28 format=3 uid="uid://l3yji6t2u1gr"]
 
 [ext_resource type="Script" path="res://Scripts/World.gd" id="1_tym0h"]
 [ext_resource type="Script" path="res://Scripts/Player.gd" id="2_qj4if"]
 [ext_resource type="PackedScene" uid="uid://dhudi52kk631y" path="res://Scenes/Gun.tscn" id="3_3bviw"]
 [ext_resource type="Script" path="res://Scripts/Screenshake.gd" id="3_q8e5j"]
 [ext_resource type="Script" path="res://Scripts/StencilBlocker.gd" id="3_xun6q"]
-[ext_resource type="PackedScene" uid="uid://bms56id7q1i6s" path="res://Scenes/Destroyer.tscn" id="4_7gymc"]
 [ext_resource type="Script" path="res://Scripts/StencilCamera.gd" id="5_2wm62"]
 [ext_resource type="Shader" path="res://Shaders/StencilShader.gdshader" id="5_o6mk8"]
 [ext_resource type="Texture2D" uid="uid://d3radhj6uixps" path="res://Textures/Crosshair/crosshair161.png" id="6_wvhx6"]
 [ext_resource type="Script" path="res://Scripts/PortalCamera.gd" id="7_ft6rt"]
 [ext_resource type="PackedScene" uid="uid://cay7ruc864d07" path="res://Scenes/fps_counter.tscn" id="8_3nm1p"]
-[ext_resource type="PackedScene" uid="uid://chuu1cjlrp7p7" path="res://Scenes/Portal.tscn" id="12_msyrq"]
 [ext_resource type="PackedScene" path="res://Scenes/floor.tscn" id="13_0fc4j"]
 [ext_resource type="Script" path="res://Scripts/MapMazeGen.gd" id="13_hprkg"]
 [ext_resource type="ArrayOccluder3D" uid="uid://d34l3wnjclrv1" path="res://World.occ" id="15_if7jw"]
@@ -87,16 +85,6 @@ shadow_enabled = true
 [node name="WorldEnvironment" type="WorldEnvironment" parent="Map"]
 environment = SubResource("Environment_088vp")
 
-[node name="Portal" parent="Map" instance=ExtResource("12_msyrq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 39.0422, 2.5, -0.699)
-skeleton = NodePath("../NavigationRegion3D/Player")
-
-[node name="Portal2" parent="Map" instance=ExtResource("12_msyrq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 41.4743, 2.5, -3.8596)
-skeleton = NodePath("../NavigationRegion3D/Player")
-current = false
-other_portal_path = NodePath("../Portal")
-
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="Map"]
 navigation_mesh = SubResource("NavigationMesh_6ipjk")
 
@@ -118,9 +106,6 @@ visible = false
 layers = 16
 mesh = SubResource("BoxMesh_41gfq")
 script = ExtResource("3_xun6q")
-
-[node name="Destroyer" parent="Map/NavigationRegion3D" instance=ExtResource("4_7gymc")]
-transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, -12.799, 0, 0)
 
 [node name="Player" type="CharacterBody3D" parent="Map/NavigationRegion3D" groups=["player"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -59.7646, -0.147188, 83.0106)
@@ -185,13 +170,15 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("ViewportTexture_2ow2d")
 
-[node name="MazeGen" type="Node3D" parent="Map/NavigationRegion3D"]
-script = ExtResource("13_hprkg")
-lol = 0
-nav_path = NodePath("..")
-
 [node name="Floor" parent="Map/NavigationRegion3D" instance=ExtResource("13_0fc4j")]
 visible = false
+
+[node name="PortalParent" type="Node3D" parent="Map/NavigationRegion3D"]
+
+[node name="MazeGen" type="Node3D" parent="Map/NavigationRegion3D"]
+script = ExtResource("13_hprkg")
+mode = 1
+nav_path = NodePath("..")
 
 [node name="UI" type="Control" parent="."]
 layout_mode = 3
@@ -225,6 +212,5 @@ occluder = ExtResource("15_if7jw")
 bake_mask = 4293918721
 bake_simplification_distance = 1.0
 
-[connection signal="screen_shake" from="Map/NavigationRegion3D/Destroyer" to="Map/NavigationRegion3D/Player/Head" method="_on_destroyer_screen_shake"]
 [connection signal="player_dead" from="Map/NavigationRegion3D/Player" to="." method="_on_player_player_dead"]
 [connection signal="screen_shake" from="Map/NavigationRegion3D/Player" to="Map/NavigationRegion3D/Player/Head" method="_on_player_screen_shake"]
