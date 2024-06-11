@@ -1,13 +1,14 @@
 extends CharacterBody3D
 
-const RUN_SPEED := 80
+var RUN_SPEED := 14
 const WALK_SPEED := 10.0
 const JUMP_VELOCITY := 7
 const SENSITIVITY := 0.003
 
 var HP := 100.0
-var gravity := 0
+var gravity := 9.8
 var speed : float
+var DMG := 14
 
 #signal
 signal player_dead
@@ -24,10 +25,11 @@ var instance
 
 
 func _ready():
+	global_transform.origin = Vector3(0,20,0)
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	#var maze_generator = get_parent().get_node("MazeGen")
-	#if maze_generator:
-	#	maze_generator.connect("player_start", _on_maze_gen_player_start)
+	if g.difficulty == 1:
+		RUN_SPEED = 20
+		DMG = 8
 	
 func _unhandled_input(event):
 	if event is InputEventMouseMotion:
@@ -45,7 +47,7 @@ func _physics_process(delta):
 		velocity.y = JUMP_VELOCITY
 		
 	if Input.is_action_just_pressed("duck") and !is_on_floor():
-		velocity.y = -JUMP_VELOCITY
+		velocity.y = -JUMP_VELOCITY/3
 		
 	#Handle sprint
 	if Input.is_action_pressed("sprint"):
@@ -62,6 +64,7 @@ func _physics_process(delta):
 		if !shoot_animation.is_playing():
 			shoot_animation.play("Shoot")
 			instance = bullet.instantiate()
+			instance.set_player(self)
 			instance.position = gun_barrel.global_position
 			instance.transform.basis = gun_barrel.global_transform.basis
 			get_parent().add_child(instance)
@@ -83,8 +86,8 @@ func _physics_process(delta):
 	
 	move_and_slide()
 	
-func hit(damage=20.0):
-	emit_signal("screen_shake")
+func hit(damage=DMG):
+	shake()
 	HP-=damage
 	print(HP)
 	if HP<=-500:
@@ -93,3 +96,6 @@ func hit(damage=20.0):
 
 func _on_maze_gen_player_start(initial: Vector3) -> void:	
 	global_transform.origin = initial
+	
+func shake():
+	screen_shake.emit()

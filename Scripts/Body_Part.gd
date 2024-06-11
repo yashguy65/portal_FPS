@@ -18,3 +18,4 @@ func _process(delta):
 
 func hit():
 	emit_signal("body_part_hit", damage)
+	

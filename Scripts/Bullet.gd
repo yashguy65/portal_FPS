@@ -7,6 +7,8 @@ extends Node3D
 @onready var particles = $GPUParticles3D
 @onready var node_mesh = $Node3D
 
+var player: Node = null
+
 func _ready():
 	pass
 
@@ -31,10 +33,15 @@ func _process(delta):
 		print(ray.get_collider())
 		if ray.get_collider().has_method("hit"):
 			ray.get_collider().hit()
+			if player != null: # player fires it and not turret
+				player.shake()	
 		if ray.get_collider().is_in_group("projectile"):
 			ray.enabled = false
 		await get_tree().create_timer(3.0).timeout
 		queue_free()
+		
+func set_player(player_node: Node):
+	player = player_node
 
 func _on_timer_timeout():
 	queue_free()

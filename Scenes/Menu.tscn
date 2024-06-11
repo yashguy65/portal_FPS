@@ -1,0 +1,78 @@
+[gd_scene load_steps=3 format=3 uid="uid://bxiomqe1y0y53"]
+
+[ext_resource type="Script" path="res://Scripts/Menu.gd" id="1_jp6ex"]
+
+[sub_resource type="Theme" id="Theme_xg7fo"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 11.0
+offset_top = -109.0
+offset_right = 106.0
+offset_bottom = 27.0
+grow_vertical = 0
+theme = SubResource("Theme_xg7fo")
+script = ExtResource("1_jp6ex")
+
+[node name="Easy Mode" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Easy"
+
+[node name="Hard mode" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Hard 
+"
+
+[node name="Controls" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Controls
+"
+
+[node name="Title" type="RichTextLabel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 492.0
+offset_top = 87.0
+offset_right = 492.0
+offset_bottom = 87.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/normal_font_size = 40
+text = "Portal FPS"
+
+[node name="Controls" type="RichTextLabel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 491.0
+offset_top = 147.0
+offset_right = 491.0
+offset_bottom = 147.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/normal_font_size = 21
+theme_override_font_sizes/bold_font_size = 11
+text = "WASD - MOVEMENT
+Esc - Quit
+Shift - Sprint
+Space - Jump
+Ctrl - Go Down"
+
+[connection signal="pressed" from="VBoxContainer/Easy Mode" to="VBoxContainer" method="_on_easy_mode_pressed"]
+[connection signal="pressed" from="VBoxContainer/Hard mode" to="VBoxContainer" method="_on_hard_mode_pressed"]
+[connection signal="pressed" from="VBoxContainer/Controls" to="VBoxContainer" method="_on_controls_pressed"]

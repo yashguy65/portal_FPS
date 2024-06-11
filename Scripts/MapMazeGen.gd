@@ -5,6 +5,7 @@ signal victory
 
 @export_enum("WITHOUT_WALLS",	"NORMAL",	"PLAYGROUND") var lol
 @export var nav_path : NodePath
+@export var visualize: bool = false
 
 var room1_scene = preload("res://Scenes/room_1_side.tscn")
 var room2_adj_scene = preload("res://Scenes/room_2_sides_adjacent.tscn")
@@ -17,19 +18,23 @@ var destroyer = preload("res://Scenes/Destroyer.tscn")
 var turret = preload("res://Scenes/Turret.tscn")
 var portal = preload("res://Scenes/Portal.tscn")
 
-var maze_size := Vector2(20, 20)
 var room_size := Vector3(30, 30, 30) #update turret.gd as well
 
 var grid: Array = []
 var unvisited: Array = []
-var hard: bool # for when easy and hard mode are added
-const grid_side := 20
+var grid_side := 20
 var rng = RandomNumberGenerator.new()
 var visited_cells: int
-@export var number_of_portal_pairs: int = 4
-@export var number_of_enemies : int = 1
+var number_of_portal_pairs: int = 5
+var number_of_enemies : int = 14
 
 func _ready():
+	# Handles easy/hard mode differences
+	if g.difficulty == 1:
+		grid_side = 10
+		number_of_portal_pairs = 3
+		number_of_enemies = 7
+		
 	grid.resize(grid_side)
 	for i in range(grid_side):
 		grid[i] = []
@@ -227,7 +232,8 @@ func visualize_navigation_mesh(nav_region: NavigationRegion3D) -> void:
 # Function to bake the navigation mesh
 func bake_mesh(nav_region: NavigationRegion3D) -> void:
 	nav_region.bake_navigation_mesh()
-	#visualize_navigation_mesh(nav_region)
+	if visualize:
+		visualize_navigation_mesh(nav_region)
 	print("Navigation mesh baked.")
 
 # Function to bake the navigation mesh from dynamically instantiated objects
@@ -291,4 +297,6 @@ func _spawn_enemies():
 				y = rng.randi_range(0, grid_side - 1)
 			var enemy = j.instantiate()
 			enemy.global_transform.origin = Vector3(x * room_size.x + rng.randi_range(0, 10), 0, y * room_size.z + rng.randi_range(0, 10))
+			if j==destroyer:
+				enemy.set_scale(Vector3(0.3,0.3,0.3))
 			add_child(enemy)
