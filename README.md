@@ -8,6 +8,9 @@ Main menu
 Gameplay
 ![Gameplay image alt text](https://github.com/yashguy65/portal_FPS/blob/main/readme_assets/gameplay.png?raw=true)
 
+Portals
+![Portals image alt text](https://github.com/yashguy65/portal_FPS/blob/main/readme_assets/portals.png?raw=true)
+
 Creative Mode
 ![Creative mode alt text](https://github.com/yashguy65/portal_FPS/blob/main/readme_assets/creative.png?raw=true)
 
