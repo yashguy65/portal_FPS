@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://l3yji6t2u1gr"]
+[gd_scene load_steps=30 format=3 uid="uid://l3yji6t2u1gr"]
 
 [ext_resource type="Script" path="res://Scripts/World.gd" id="1_tym0h"]
 [ext_resource type="Script" path="res://Scripts/Player.gd" id="2_qj4if"]
@@ -7,7 +7,6 @@
 [ext_resource type="Script" path="res://Scripts/StencilBlocker.gd" id="3_xun6q"]
 [ext_resource type="PackedScene" uid="uid://bms56id7q1i6s" path="res://Scenes/Destroyer.tscn" id="4_7gymc"]
 [ext_resource type="Script" path="res://Scripts/StencilCamera.gd" id="5_2wm62"]
-[ext_resource type="PackedScene" uid="uid://dbqp5qmntilfy" path="res://Scenes/Turret.tscn" id="5_4ub5r"]
 [ext_resource type="Shader" path="res://Shaders/StencilShader.gdshader" id="5_o6mk8"]
 [ext_resource type="Texture2D" uid="uid://d3radhj6uixps" path="res://Textures/Crosshair/crosshair161.png" id="6_wvhx6"]
 [ext_resource type="Script" path="res://Scripts/PortalCamera.gd" id="7_ft6rt"]
@@ -105,11 +104,6 @@ navigation_mesh = SubResource("NavigationMesh_6ipjk")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.064476, 0)
 layers = 2
 
-[node name="Turret" parent="Map/NavigationRegion3D" instance=ExtResource("5_4ub5r")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.319, 0, 13.0908)
-collision_layer = 3
-collision_mask = 3
-
 [node name="StencilBlockBox" type="CSGBox3D" parent="Map/NavigationRegion3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0068059, 1.21159, -0.00742435)
 use_collision = true
@@ -193,8 +187,8 @@ texture = SubResource("ViewportTexture_2ow2d")
 
 [node name="MazeGen" type="Node3D" parent="Map/NavigationRegion3D"]
 script = ExtResource("13_hprkg")
+lol = 0
 nav_path = NodePath("..")
-number_of_enemies = 18
 
 [node name="Floor" parent="Map/NavigationRegion3D" instance=ExtResource("13_0fc4j")]
 visible = false
@@ -232,5 +226,3 @@ bake_simplification_distance = 1.0
 [connection signal="screen_shake" from="Map/NavigationRegion3D/Destroyer" to="Map/NavigationRegion3D/Player/Head" method="_on_destroyer_screen_shake"]
 [connection signal="player_dead" from="Map/NavigationRegion3D/Player" to="." method="_on_player_player_dead"]
 [connection signal="screen_shake" from="Map/NavigationRegion3D/Player" to="Map/NavigationRegion3D/Player/Head" method="_on_player_screen_shake"]
-[connection signal="player_start" from="Map/NavigationRegion3D/MazeGen" to="Map/NavigationRegion3D/Player" method="_on_maze_gen_player_start"]
-[connection signal="victory" from="Map/NavigationRegion3D/MazeGen" to="." method="_on_maze_gen_victory"]

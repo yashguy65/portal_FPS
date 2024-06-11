@@ -3,7 +3,7 @@ extends Node3D
 signal player_start(initial: Vector3)
 signal victory
 
-@export var testing : bool = false
+@export_enum("WITHOUT_WALLS",	"NORMAL",	"PLAYGROUND") var lol
 @export var nav_path : NodePath
 
 var room1_scene = preload("res://Scenes/room_1_side.tscn")
@@ -18,7 +18,7 @@ var turret = preload("res://Scenes/Turret.tscn")
 var portal = preload("res://Scenes/Portal.tscn")
 
 var maze_size := Vector2(20, 20)
-var room_size := Vector3(30, 30, 30)
+var room_size := Vector3(30, 30, 30) #update turret.gd as well
 
 var grid: Array = []
 var unvisited: Array = []
@@ -27,7 +27,7 @@ const grid_side := 20
 var rng = RandomNumberGenerator.new()
 var visited_cells: int
 @export var number_of_portal_pairs: int = 4
-@export var number_of_enemies : int = 8
+@export var number_of_enemies : int = 1
 
 func _ready():
 	grid.resize(grid_side)
@@ -77,11 +77,13 @@ func _ready():
 				current_cell = backtrack.pop_back()
 			else:
 				break
-	if testing:
-		# _instantiate_test_rooms() is commented out since it's not implemented
+	if lol == 2:
+		_instantiate_test_rooms() 
 		pass
-	else:
+	elif lol == 1:
 		_instantiate_rooms()
+	else: # lol == 0
+		_instantiate_empty_rooms()
 	bake_navigation_mesh(nav_path)
 	_emit_player_start(initial_position)
 	_spawn_enemies()
@@ -269,6 +271,15 @@ func _instantiate_test_rooms():
 				room_instance.rotate_y(deg_to_rad(180))
 	
 		add_child(room_instance)
+		
+func _instantiate_empty_rooms():
+	for x in range(grid_side):
+		for y in range(grid_side):
+			var room_instance = room0_scene.instantiate()
+			if room_instance is Node3D:
+				room_instance.transform.origin = Vector3(x * room_size.x, 15, y * room_size.z)
+			add_child(room_instance)
+	
 
 func _spawn_enemies():
 	for j in [turret, destroyer]:
@@ -279,5 +290,5 @@ func _spawn_enemies():
 				x = rng.randi_range(0, grid_side - 1)
 				y = rng.randi_range(0, grid_side - 1)
 			var enemy = j.instantiate()
-			enemy.transform.origin = Vector3(x * room_size.x + rng.randi_range(0, 10), 0, y * room_size.z + rng.randi_range(0, 10))
+			enemy.global_transform.origin = Vector3(x * room_size.x + rng.randi_range(0, 10), 0, y * room_size.z + rng.randi_range(0, 10))
 			add_child(enemy)
