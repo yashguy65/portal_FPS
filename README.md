@@ -1,4 +1,5 @@
-# portal_FPS
+# 3D MAZE PORTAL FPS 
+
 A first person shooter where you have to navigate to the end of the maze using portals and evade/defeat enemies on the way. Made for CRUx Round 3.
 
 Main menu
