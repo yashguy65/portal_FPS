@@ -1,21 +1,15 @@
 extends Area3D
 
-@export var damage := 15
+@export var damage := 15 # Damage taken on each hit
 
-signal body_part_hit(dam)
+signal body_part_hit(dam) # Signal to be sent to actual destroyer
 
-
-# Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	pass 
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	pass
 
-
-
 func hit():
-	emit_signal("body_part_hit", damage)
+	emit_signal("body_part_hit", damage) # Sends signal to body
 	

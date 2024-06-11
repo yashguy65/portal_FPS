@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://l3yji6t2u1gr"]
+[gd_scene load_steps=29 format=3 uid="uid://l3yji6t2u1gr"]
 
 [ext_resource type="Script" path="res://Scripts/World.gd" id="1_tym0h"]
 [ext_resource type="Script" path="res://Scripts/Player.gd" id="2_qj4if"]
@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://cay7ruc864d07" path="res://Scenes/fps_counter.tscn" id="8_3nm1p"]
 [ext_resource type="PackedScene" path="res://Scenes/floor.tscn" id="13_0fc4j"]
 [ext_resource type="Script" path="res://Scripts/MapMazeGen.gd" id="13_hprkg"]
+[ext_resource type="Texture2D" uid="uid://c1kd8ev4tvcin" path="res://Textures/start.jpeg" id="13_isfgr"]
 [ext_resource type="ArrayOccluder3D" uid="uid://d34l3wnjclrv1" path="res://World.occ" id="15_if7jw"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3y4ak"]
@@ -246,10 +247,17 @@ fit_content = true
 visible_characters = 14
 visible_ratio = 1.75
 
+[node name="Bg" type="TextureRect" parent="UI"]
+visible = false
+offset_left = 4.0
+offset_right = 1028.0
+offset_bottom = 1024.0
+scale = Vector2(1.12, 0.64)
+texture = ExtResource("13_isfgr")
+
 [node name="OccluderInstance3D" type="OccluderInstance3D" parent="."]
 occluder = ExtResource("15_if7jw")
 bake_mask = 4293918721
-bake_simplification_distance = 1.5
 
 [connection signal="game_win" from="Map/NavigationRegion3D/Player" to="." method="_on_player_game_win"]
 [connection signal="player_dead" from="Map/NavigationRegion3D/Player" to="." method="_on_player_player_dead"]

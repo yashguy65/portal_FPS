@@ -1,73 +1,48 @@
 extends MeshInstance3D
 
+# Define a custom class for a portal within the 3D scene.
 class_name CamPortal
 
-@export var current = false
+# Path to the other portal for transport
 @export var other_portal_path: NodePath
+# Helper node for assisting with portal rendering.
 @onready var helper = $Helper
+# Frame node for displaying the portal frame.
 @onready var frame = $Frame
 
+# Reference to the other portal object.
 var other_portal: CamPortal = null
 
+# Called when the node is added to the scene.
 func _ready():
-	while (other_portal_path.is_empty()):
-		pass
+	# If the other portal path is set, attempt to find the other portal node.
 	if not other_portal_path.is_empty():
 		other_portal = get_node(other_portal_path)
-		if other_portal == null:
-			print("Failed to find other portal at path:", other_portal_path)
-		else:
-			print("Other portal found at path:", other_portal_path)
-	else:
-		print("No other_portal_path set.")
-	
-	if current:
-		$Inside.visible = true
-	print("Path:", self.get_path())
-	print("Other portal path:", other_portal_path)
 
 func _process(delta):
-	if current:
-		frame.visible = true
-		var main_cam = get_viewport().get_camera_3d()
-		helper.global_transform = main_cam.global_transform
-		if other_portal:
-			other_portal.helper.transform = helper.transform
-		else:
-			print("Other portal is null. self: ", self.get_path())
+	# Show the frame and sync helper position with the main camera.
+	var main_cam = get_viewport().get_camera_3d()
+	helper.global_transform = main_cam.global_transform
+	# If there's another portal, synchronize helper transforms.
+	if other_portal:
 		other_portal.helper.transform = helper.transform
-		g.portal_camera.global_transform = other_portal.helper.global_transform
-		var diff = global_transform.origin - main_cam.global_transform.origin
-		var angle = main_cam.global_transform.basis.z.angle_to(diff)
-		var near_plane = helper.transform.origin.length()*abs(cos(angle))
-		g.portal_camera.near = max(0.1, near_plane-4.2)
-		if not visible:
-			visible = true
-	else:
-		frame.visible = false
-		if visible:
-			visible=false
+	g.portal_camera.global_transform = other_portal.helper.global_transform
+	# Calculate near plane distance for rendering.
+	var diff = global_transform.origin - main_cam.global_transform.origin
+	var angle = main_cam.global_transform.basis.z.angle_to(diff)
+	var near_plane = helper.transform.origin.length() * abs(cos(angle))
+	g.portal_camera.near = max(0.1, near_plane - 4.2)
 
+# Called when a body enters the portal for teleportation.
 func _on_teleport_body_entered(body):
 	if not body.is_in_group("player"):
 		return
-	if not current:
-		current = true
-		visible = true
-		frame.visible = true
-	if current and $Inside.visible:
-		helper.global_transform = body.global_transform
-		other_portal.helper.transform = helper.transform
-		body.global_transform = other_portal.helper.global_transform
-		current = false
-		$Inside.visible = false
+	# Initiate teleportation.
+	helper.global_transform = body.global_transform
+	other_portal.helper.transform = helper.transform
+	body.global_transform = other_portal.helper.global_transform
 
+# Called when a body exits the inside of the portal.
 func _on_inside_body_exited(body):
 	if not body.is_in_group("player"):
 		return
-	if current and not $Inside.visible:
-		$Inside.visible = true
-		
-func set_other_portal_path(path: NodePath):
-	other_portal_path = path
-	print("Setting other_portal_path:", path)

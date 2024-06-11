@@ -2,6 +2,8 @@ extends Node3D
 
 signal player_start(initial: Vector3)
 
+# Load resources
+
 @export_enum("WITHOUT_WALLS",	"NORMAL",	"PLAYGROUND") var mode = 1 #NORMAL BY DEFAULT
 @export var nav_path : NodePath
 @export var visualize: bool = false
@@ -52,7 +54,7 @@ func _ready():
 	if g.game_journalist:
 		mode = 0
 		
-	grid.resize(grid_side)
+	grid.resize(grid_side) # Setup 3D array for maze generation
 	for i in range(grid_side):
 		grid[i] = []
 		for j in range(grid_side):
@@ -71,6 +73,8 @@ func _ready():
 	var initial_position = Vector3(x * room_size.x, 0, y * room_size.z)
 
 	while visited_cells < (grid_side * grid_side):
+		# Keep traversing and backtrack when no neighbours
+		
 		var neighbours: Array = checkNeighboursWithWallsIntact(current_cell)
 		if neighbours.size() > 0:
 			var z: int = rng.randi_range(0, neighbours.size() - 1)
@@ -143,6 +147,7 @@ func _ready():
 	bake_navigation_mesh(nav_path)
 
 func checkNeighboursWithWallsIntact(coords: Vector2) -> Array:
+	# in DFS maze, checks for adjacent untraversed cells using walls
 	var possible: Array = [Vector2(0, 1), Vector2(1, 0), Vector2(0, -1), Vector2(-1, 0)]
 	var list: Array = []
 	for i in possible:
@@ -156,6 +161,7 @@ func checkNeighboursWithWallsIntact(coords: Vector2) -> Array:
 	return list
 
 func _instantiate_rooms() -> void:
+	# Physically create room from 3D array
 	for x in range(grid_side):
 		for y in range(grid_side):
 			var room_scene = get_room_type(grid[x][y])
@@ -166,6 +172,7 @@ func _instantiate_rooms() -> void:
 			add_child(room_instance)
 
 func get_room_type(cell: Array) -> PackedScene:
+	# Get which type of room to use based on number of walls
 	var walls = cell.slice(12, 16)
 	var wall_count = walls.count(1)
 
@@ -185,7 +192,9 @@ func get_room_type(cell: Array) -> PackedScene:
 		print("0 WALL ROOM")
 		return room0_scene
 
-func _apply_rotation(node: Node3D, cell: Array) -> void:
+func _apply_rotation(node: Node3D, cell: Array) -> void: 
+	# Used to rotate rooms before positioning, eliminates need for 16 room models 
+	# based on WSEN wall config
 	var walls = cell.slice(12, 16)
 	var rotation_degrees = 0
 
@@ -227,10 +236,10 @@ func _apply_rotation(node: Node3D, cell: Array) -> void:
 
 	node.rotate_y(deg_to_rad(rotation_degrees))
 
-func _emit_player_start(posn: Vector3) -> void:
+func _emit_player_start(posn: Vector3) -> void: # sets initial position of player
 	player_start.emit(posn)
 
-func collect_meshes(node: Node, meshes: Array):
+func collect_meshes(node: Node, meshes: Array): # Used in mesh baking
 	if node == null:
 		return
 
@@ -239,7 +248,7 @@ func collect_meshes(node: Node, meshes: Array):
 			meshes.append(child)
 		collect_meshes(child, meshes)
 
-# Function to visualize the navigation mesh
+# Function to visualize the navigation mesh for testing
 func visualize_navigation_mesh(nav_region: NavigationRegion3D) -> void:
 	if not nav_region:
 		print("Error: NavigationRegion3D node not found!")
@@ -286,6 +295,7 @@ func bake_mesh(nav_region: NavigationRegion3D) -> void:
 	print("Navigation mesh baked.")
 
 # Function to bake the navigation mesh from dynamically instantiated objects
+# Essential for pathfinding in destroyers
 func bake_navigation_mesh(nav_region_path: NodePath) -> void:
 	var nav_region = get_node(nav_region_path) as NavigationRegion3D
 	if nav_region == null:
@@ -316,7 +326,7 @@ func bake_navigation_mesh(nav_region_path: NodePath) -> void:
 	call_deferred("bake_mesh", nav_region)
 
 
-func _instantiate_test_rooms():
+func _instantiate_test_rooms(): # To play with room, rotation, etc. for testing
 	var room_scene: Array = [room2_adj_scene, room2_adj_scene]
 	for i in range(len(room_scene)):
 		var room_instance = room_scene[i].instantiate()                
@@ -327,7 +337,7 @@ func _instantiate_test_rooms():
 	
 		add_child(room_instance)
 		
-func _instantiate_empty_rooms():
+func _instantiate_empty_rooms(): # For creative mode
 	for x in range(grid_side):
 		for y in range(grid_side):
 			var room_instance = room0_scene.instantiate()
@@ -341,13 +351,13 @@ func _spawn_enemies():
 		for i in range(number_of_enemies):
 			var x: int = 0
 			var y: int = 0
-			while x == 0 and y == 0:
+			while x == 0 and y == 0: # Get random position to spawn enemy
 				x = rng.randi_range(0, grid_side - 1)
 				y = rng.randi_range(0, grid_side - 1)
 			var enemy = j.instantiate()
-			add_child(enemy)
+			add_child(enemy) 
 			enemy.global_transform.origin = Vector3(x * room_size.x + rng.randi_range(0, 7), 0, y * room_size.z + rng.randi_range(0, 7))
-			if j==destroyer:
+			if j==destroyer: # Scale down destroyer model
 				enemy.set_scale(Vector3(0.3,0.3,0.3))
 			
 # Function to place portals on the maze
@@ -359,18 +369,19 @@ func _place_portals():
 		var a: int = 0
 		var b: int = 0
 		
+		# Make sure coordinates not at origin
 		while x == 0 and y == 0:
 			x = rng.randi_range(0, grid_side - 1)
 			y = rng.randi_range(0, grid_side - 1)
 		
+		# Make sure second portal not coinciding with first portal or origin
 		while (a == 0 and b == 0) or (a == x and b == y):
 			a = rng.randi_range(0, grid_side - 1)
 			b = rng.randi_range(0, grid_side - 1)
 		
+		# Start portal pair and set locations
 		var instance = portal_pair.instantiate()
 		add_child(instance)
-		
-		instance.get_node("Portal1").current = true
 		
 		instance.get_node("Portal1").global_transform.origin = Vector3(x * room_size.x + rng.randi_range(0, 5), 3.286, y * room_size.z + rng.randi_range(0, 5))
 		instance.get_node("Portal2").global_transform.origin = Vector3(a * room_size.x + rng.randi_range(0, 5), 3.286, b * room_size.z + rng.randi_range(0, 5))
@@ -380,7 +391,6 @@ func _place_portals():
 	# Place the 'solution portals'
 	var instance = portal_pair.instantiate()
 	add_child(instance)
-	instance.get_node("Portal1").current = true
 	instance.get_node("Portal1").global_transform.origin = Vector3(portalLoc1.x * room_size.x + rng.randi_range(0, 5), 3.286, portalLoc1.y * room_size.z + rng.randi_range(0, 5))
 	instance.get_node("Portal2").global_transform.origin = Vector3(portalLoc2.x * room_size.x + rng.randi_range(0, 5), 3.286, portalLoc2.y * room_size.z + rng.randi_range(0, 5))
 	

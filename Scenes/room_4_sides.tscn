@@ -61,7 +61,7 @@ transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 [node name="Sketchfab_model" parent="." index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
-[node name="Object_2" parent="Sketchfab_model/8bd9b59414a443dca951aa93db096a8e_obj_cleaner_materialmerger_gle" index="0"]
+[node name="Object_2" parent="Sketchfab_model/8bd9b59414a443dca951aa93db096a8e_obj_cleaner_materialmerger_gle" index="0" groups=["projectile"]]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
 mesh = SubResource("ArrayMesh_c6vyj")
 

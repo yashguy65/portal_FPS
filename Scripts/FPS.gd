@@ -1,13 +1,9 @@
 extends Label
 
-
-# Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	pass 
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	var FPS = Engine.get_frames_per_second()
-	text = str(FPS)+" FPS"
+	var FPS = Engine.get_frames_per_second() # Uses inbuilt function to get FPS
+	text = str(FPS)+" FPS" # Displayed on top left by default
 

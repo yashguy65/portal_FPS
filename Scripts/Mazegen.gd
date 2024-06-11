@@ -1,9 +1,10 @@
 extends Node
 
+# Foundation for DFS Maze Gen, in case MapMazeGen is messed up use as reference
+
 var grid: Array = []
 var unvisited: Array = []
 var cell
-var hard: bool # for when easy and hard mode are added
 const grid_side := 20
 var rng = RandomNumberGenerator.new()
 var visited_cells : int 
@@ -23,7 +24,7 @@ func printGrid(arr: Array):
 		print(row)
 			
 		
-func checkNeighboursWithWallsIntact(grid: Array, coords: Vector2) -> Array:
+func checkNeighboursWithWallsIntact(coords: Vector2) -> Array:
 	var possible: Array = [Vector2(0,1), Vector2(1,0), Vector2(0,-1), Vector2(-1,0)]
 	var list: Array = []
 	for i in possible:
@@ -48,36 +49,57 @@ func _ready():
 	var current_cell := Vector2(x,y)
 	visited_cells = 1
 	var backtrack: Array = []
-	while visited_cells < (grid_side*grid_side):
-		var neighbours: Array = checkNeighboursWithWallsIntact(grid, current_cell)
-		print("neighbours", neighbours, "\n")
-		if neighbours.size()>0:
-			var z: int = rng.randf_range(0,neighbours.size()-1)
-			var next_cell = Vector2(neighbours[z].x, neighbours[z].y)
-			#check which walls the neighbour is connected by
+	while visited_cells < (grid_side * grid_side):
+		var neighbours: Array = checkNeighboursWithWallsIntact(current_cell)
+		if neighbours.size() > 0:
+			var z: int = rng.randi_range(0, neighbours.size() - 1)
+			var next_cell = neighbours[z]
+			# Check which walls the neighbour is connected by
 			if next_cell.x == current_cell.x:
-				if (next_cell.y - current_cell.y == 1):
-					grid[current_cell.x][current_cell.y][14] = 0
-				elif (next_cell.y - current_cell.y == -1):
-					grid[current_cell.x][current_cell.y][12] = 0
-				else:
-					print("line 55")
-			elif (next_cell.y == current_cell.y):
-				if (next_cell.x - current_cell.x == 1):
-					grid[current_cell.x][current_cell.y][13] = 0
-				elif (next_cell.x - current_cell.x == -1):
-					grid[current_cell.x][current_cell.y][15] = 0
-				else:
-					print("line62")
-			else:
-				print("neighbour equal to current cell")
+				if next_cell.y == current_cell.y + 1: # 0,0 to 0,1 
+					grid[current_cell.x][current_cell.y][13] = 0 # SOUTH WALL CURRENT 
+					grid[next_cell.x][next_cell.y][15] = 0 # NORTH WALL NEXT
+				elif next_cell.y == current_cell.y - 1: #0,1 to 0,0
+					grid[current_cell.x][current_cell.y][15] = 0 # NORTH WALL CURRENT
+					grid[next_cell.x][next_cell.y][13] = 0 # SOUTH WALL NEXT
+			elif next_cell.y == current_cell.y:
+				if next_cell.x == current_cell.x + 1: #0,0 to 1,0
+					grid[current_cell.x][current_cell.y][14] = 0 #EAST WALL CURRENT
+					grid[next_cell.x][next_cell.y][12] = 0 #WEST WALL NEXT
+				elif next_cell.x == current_cell.x - 1: #1,0 to 0,0
+					grid[current_cell.x][current_cell.y][12] = 0 # WEST WALL CURRENT
+					grid[next_cell.x][next_cell.y][14] = 0 #EAST WALL NEXT
 			backtrack.append(current_cell)
-			current_cell = next_cell			
-			visited_cells+=1
+			
+			# MAKE MAZE IMPOSSIBLE TO TRAVERSE WITHOUT PORTAL
+			# By blocking the "right path" to (grid_side-1, grid_side-1) and having portals 
+			# on either side and all of this info abstracted from the player, plus some 
+			# rand int to introduce unpredictability
+			
+			if current_cell == Vector2(grid_side-1, grid_side-1):
+				var left: Vector2 = backtrack[int(backtrack.size()/2)-1] # Middle left element of array backtrack
+				var right: Vector2 = backtrack[int(backtrack.size()/2)] # Middle right element of array
+				# Make wall between them like above but reversed
+				if right.x == left.x:
+					if right.y == left.y + 1: # 0,0 to 0,1 
+						grid[left.x][left.y][13] = 1 # SOUTH WALL LEFT
+						grid[right.x][right.y][15] = 1 # NORTH WALL RIGHT
+					elif right.y == left.y - 1: #0,1 to 0,0
+						grid[left.x][left.y][15] = 1 # NORTH WALL LEFT
+						grid[right.x][right.y][13] = 1 # SOUTH WALL RIGHT
+				elif right.y == left.y:
+					if right.x == left.x + 1: #0,0 to 1,0
+						grid[left.x][left.y][14] = 1 #EAST WALL LEFT
+						grid[right.x][right.y][12] = 1 #WEST WALL RIGHT
+					elif right.x == left.x - 1: #1,0 to 0,0
+						grid[left.x][left.y][12] = 1 # WEST WALL LEFT
+						grid[right.x][right.y][14] = 1 #EAST WALL RIGHT					
+			current_cell = next_cell            
+			visited_cells += 1
+			unvisited.erase(next_cell)
 		else:
-			var z = backtrack.pop_back()
-			if z:
-				current_cell = z
+			if backtrack.size() > 0:
+				current_cell = backtrack.pop_back()
 			else:
 				break
 	print("GRID:\n\n")
