@@ -1,7 +1,6 @@
 extends Node3D
 
 signal player_start(initial: Vector3)
-signal victory
 
 @export_enum("WITHOUT_WALLS",	"NORMAL",	"PLAYGROUND") var mode
 @export var nav_path : NodePath

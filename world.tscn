@@ -207,10 +207,31 @@ texture = ExtResource("6_wvhx6")
 [node name="FPSCounter" parent="UI" instance=ExtResource("8_3nm1p")]
 layout_mode = 1
 
+[node name="YouWin" type="RichTextLabel" parent="UI"]
+visible = false
+top_level = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 497.0
+offset_top = 259.0
+offset_right = 497.0
+offset_bottom = 549.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/normal_font_size = 40
+text = "YOU WIN
+"
+fit_content = true
+visible_characters = 14
+visible_ratio = 1.75
+
 [node name="OccluderInstance3D" type="OccluderInstance3D" parent="."]
 occluder = ExtResource("15_if7jw")
 bake_mask = 4293918721
 bake_simplification_distance = 1.0
 
+[connection signal="game_win" from="Map/NavigationRegion3D/Player" to="." method="_on_player_game_win"]
 [connection signal="player_dead" from="Map/NavigationRegion3D/Player" to="." method="_on_player_player_dead"]
 [connection signal="screen_shake" from="Map/NavigationRegion3D/Player" to="Map/NavigationRegion3D/Player/Head" method="_on_player_screen_shake"]

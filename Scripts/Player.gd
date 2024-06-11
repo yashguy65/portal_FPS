@@ -13,6 +13,7 @@ var DMG := 14
 #signal
 signal player_dead
 signal screen_shake
+signal game_win
 
 #bullets
 var bullet = load("res://Scenes/Bullet.tscn")
@@ -24,6 +25,8 @@ var instance
 @onready var gun_barrel = $Head/Camera3D/RayCast3D
 
 var maze_side = 20
+const room_side = 30
+var endpoint : Vector3
 
 func _ready():
 	global_transform.origin = Vector3(0,20,0)
@@ -33,6 +36,7 @@ func _ready():
 		RUN_SPEED = 20
 		DMG = 8
 		maze_side = 10
+	endpoint = Vector3((maze_side-1) * room_side, 0, (maze_side-1) * room_side)
 	
 func _unhandled_input(event):
 	if event is InputEventMouseMotion:
@@ -51,6 +55,10 @@ func _physics_process(delta):
 		
 	if Input.is_action_just_pressed("duck") and !is_on_floor():
 		velocity.y = -JUMP_VELOCITY/3
+		
+	if endpoint.distance_to(self.global_transform.origin) < 14:
+		game_win.emit()
+		
 		
 	#Handle sprint
 	if Input.is_action_pressed("sprint"):

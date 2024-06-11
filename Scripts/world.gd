@@ -3,6 +3,7 @@ extends Node3D
 @onready var navigation_region = $Map/NavigationRegion3D
 @onready var black_screen = $UI/BlackScreen
 @onready var crosshair = $UI/Crosshair
+@onready var youwin = $UI/YouWin
 
 
 var turret = load("res://Scenes/Turret.tscn")
@@ -19,14 +20,10 @@ func _ready():
 func _process(delta):
 	pass
 
-
-#instance = turret.instantiate()
-#instance.position = helperMazeFn
-
 func _on_player_player_dead():
-	pass#black_screen.visible = true
-	#make game over scene
+	black_screen.visible = true
 
 
-func _on_maze_gen_victory():
-	pass # you win screen
+func _on_player_game_win():
+	youwin.visible = true
+	black_screen.visible = true
