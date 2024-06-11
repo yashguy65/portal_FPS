@@ -86,10 +86,11 @@ text = "                                                	WASD - MOVEMENT
 
 [node name="Background" type="TextureRect" parent="."]
 layout_mode = 0
-offset_left = 4.0
-offset_right = 1028.0
-offset_bottom = 1024.0
-scale = Vector2(1.12, 0.64)
+offset_left = -23.0
+offset_top = -3.0
+offset_right = 1001.0
+offset_bottom = 1021.0
+scale = Vector2(1.16, 0.64)
 texture = ExtResource("2_mxp3n")
 
 [connection signal="pressed" from="VBoxContainer/Controls" to="VBoxContainer" method="_on_controls_pressed"]
