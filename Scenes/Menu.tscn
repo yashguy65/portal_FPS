@@ -18,26 +18,30 @@ layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 11.0
-offset_top = -109.0
-offset_right = 106.0
-offset_bottom = 27.0
+offset_left = 7.0
+offset_top = -152.0
+offset_right = 139.0
+offset_bottom = -16.0
 grow_vertical = 0
 theme = SubResource("Theme_xg7fo")
 script = ExtResource("1_jp6ex")
 
-[node name="Easy Mode" type="Button" parent="VBoxContainer"]
+[node name="Controls" type="Button" parent="VBoxContainer"]
 layout_mode = 2
-text = "Easy"
+text = "How to play"
 
 [node name="Hard mode" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 text = "Hard 
 "
 
-[node name="Controls" type="Button" parent="VBoxContainer"]
+[node name="Easy Mode" type="Button" parent="VBoxContainer"]
 layout_mode = 2
-text = "How to play"
+text = "Easy"
+
+[node name="LOL" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Game Journalist"
 
 [node name="Title" type="RichTextLabel" parent="."]
 top_level = true
@@ -85,6 +89,7 @@ offset_right = 1300.0
 offset_bottom = 757.0
 color = Color(0, 0, 0, 1)
 
-[connection signal="pressed" from="VBoxContainer/Easy Mode" to="VBoxContainer" method="_on_easy_mode_pressed"]
-[connection signal="pressed" from="VBoxContainer/Hard mode" to="VBoxContainer" method="_on_hard_mode_pressed"]
 [connection signal="pressed" from="VBoxContainer/Controls" to="VBoxContainer" method="_on_controls_pressed"]
+[connection signal="pressed" from="VBoxContainer/Hard mode" to="VBoxContainer" method="_on_hard_mode_pressed"]
+[connection signal="pressed" from="VBoxContainer/Easy Mode" to="VBoxContainer" method="_on_easy_mode_pressed"]
+[connection signal="pressed" from="VBoxContainer/LOL" to="VBoxContainer" method="_on_lol_pressed"]

@@ -1,6 +1,6 @@
 extends CharacterBody3D
 
-var RUN_SPEED := 14
+var RUN_SPEED := 18
 const WALK_SPEED := 10.0
 const JUMP_VELOCITY := 7
 const SENSITIVITY := 0.003
@@ -33,9 +33,13 @@ func _ready():
 	apply_floor_snap()
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	if g.difficulty == 1: #easy
-		RUN_SPEED = 20
+		RUN_SPEED = 22
 		DMG = 8
 		maze_side = 10
+		HP = 200
+	if g.game_journalist:
+		RUN_SPEED = 80
+		HP = 1000000
 	endpoint = Vector3((maze_side-1) * room_side, 0, (maze_side-1) * room_side)
 	
 func _unhandled_input(event):
@@ -101,7 +105,7 @@ func hit(damage=DMG):
 	shake()
 	HP-=damage
 	print(HP)
-	if HP<=-500:
+	if HP<=0:
 		emit_signal("player_dead")
 
 

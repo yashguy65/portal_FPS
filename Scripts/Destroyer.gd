@@ -19,7 +19,7 @@ var instance
 
 var HP := 100
 
-const SPEED := 4.0
+var SPEED := 14.0
 const gravity := 9.8
 const SIGHT_RANGE := 4
 var TRACK_RANGE := 48
@@ -30,6 +30,7 @@ func _ready():
 	state_machine.start("Start")
 	if g.difficulty == 1:
 		TRACK_RANGE = 38
+		SPEED = 11
 
 func _physics_process(delta):
 	

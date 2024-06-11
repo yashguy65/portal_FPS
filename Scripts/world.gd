@@ -4,6 +4,7 @@ extends Node3D
 @onready var black_screen = $UI/BlackScreen
 @onready var crosshair = $UI/Crosshair
 @onready var youwin = $UI/YouWin
+@onready var youlose = $UI/YouLose
 
 
 var turret = load("res://Scenes/Turret.tscn")
@@ -22,6 +23,7 @@ func _process(delta):
 
 func _on_player_player_dead():
 	black_screen.visible = true
+	youlose.visible = true
 
 
 func _on_player_game_win():

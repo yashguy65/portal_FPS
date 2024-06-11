@@ -2,7 +2,7 @@ extends Node3D
 
 signal player_start(initial: Vector3)
 
-@export_enum("WITHOUT_WALLS",	"NORMAL",	"PLAYGROUND") var mode
+@export_enum("WITHOUT_WALLS",	"NORMAL",	"PLAYGROUND") var mode = 1 #NORMAL BY DEFAULT
 @export var nav_path : NodePath
 @export var visualize: bool = false
 
@@ -13,6 +13,8 @@ var room3_scene = preload("res://Scenes/room_3_sides.tscn")
 var room4_scene = preload("res://Scenes/room_4_sides.tscn")
 var room0_scene = preload("res://Scenes/room_0_sides.tscn")
 var portal_pair = preload("res://Scenes/portal_pair.tscn")
+var portalLoc1 : Vector2
+var portalLoc2: Vector2
 
 @onready var portal_parent: Node3D = $"../PortalParent"
 
@@ -20,22 +22,35 @@ var destroyer = preload("res://Scenes/Destroyer.tscn")
 var turret = preload("res://Scenes/Turret.tscn")
 var portal = preload("res://Scenes/Portal.tscn")
 
-var room_size := Vector3(30, 30, 30) #update turret.gd as well
+var room_size := Vector3(30, 30, 30) # Update turret.gd as well if it changes
 
 var grid: Array = []
 var unvisited: Array = []
 var grid_side := 20
 var rng = RandomNumberGenerator.new()
 var visited_cells: int
-var number_of_portal_pairs: int = 5
-var number_of_enemies : int = 14
+var number_of_portal_pairs: int = 7
+var number_of_enemies : int = 18
+
+#----------------------------------------KEY------------------------------------------------
+#BACKTRACK SOLUTION BORDER      WALLS
+# 0123		4567	8/9/10/11	12/13/14/15
+# 0000		0000	0000		0000
+# WSEN		WSEN	WSEN		WSEN
+
+#=ONLY WALLS ATM BUT COULD BE IMPROVED
+#------------------------------------------------------------------------------------------
 
 func _ready():
 	# Handles easy/hard mode differences
 	if g.difficulty == 1:
 		grid_side = 10
-		number_of_portal_pairs = 3
-		number_of_enemies = 7
+		number_of_portal_pairs = 4
+		number_of_enemies = 6
+		
+	# Easy way to test from main menu
+	if g.game_journalist:
+		mode = 0
 		
 	grid.resize(grid_side)
 	for i in range(grid_side):
@@ -76,6 +91,37 @@ func _ready():
 					grid[current_cell.x][current_cell.y][12] = 0 # WEST WALL CURRENT
 					grid[next_cell.x][next_cell.y][14] = 0 #EAST WALL NEXT
 			backtrack.append(current_cell)
+			
+			# MAKE MAZE IMPOSSIBLE TO TRAVERSE WITHOUT PORTAL
+			# By blocking the "right path" to (grid_side-1, grid_side-1) and having portals 
+			# on either side and all of this info abstracted from the player, plus some 
+			# rand int to introduce unpredictability
+			
+			if current_cell == Vector2(grid_side-1, grid_side-1):
+				var left: Vector2 = backtrack[int(backtrack.size()/2)-1] # Middle left element of array backtrack
+				var right: Vector2 = backtrack[int(backtrack.size()/2)] # Middle right element of array
+				# Make wall between them like above but reversed
+				if right.x == left.x:
+					if right.y == left.y + 1: # 0,0 to 0,1 
+						grid[left.x][left.y][13] = 1 # SOUTH WALL LEFT
+						grid[right.x][right.y][15] = 1 # NORTH WALL RIGHT
+					elif right.y == left.y - 1: #0,1 to 0,0
+						grid[left.x][left.y][15] = 1 # NORTH WALL LEFT
+						grid[right.x][right.y][13] = 1 # SOUTH WALL RIGHT
+				elif right.y == left.y:
+					if right.x == left.x + 1: #0,0 to 1,0
+						grid[left.x][left.y][14] = 1 #EAST WALL LEFT
+						grid[right.x][right.y][12] = 1 #WEST WALL RIGHT
+					elif right.x == left.x - 1: #1,0 to 0,0
+						grid[left.x][left.y][12] = 1 # WEST WALL LEFT
+						grid[right.x][right.y][14] = 1 #EAST WALL RIGHT
+				if g.difficulty == 2:
+					portalLoc1 = backtrack[int(backtrack.size()/2) - rng.randi_range(4, 7)]
+					portalLoc2 = backtrack[int(backtrack.size()/2) + rng.randi_range(4, 7)]
+				else:
+					portalLoc1 = backtrack[int(backtrack.size()/2) - rng.randi_range(2, 5)]
+					portalLoc2 = backtrack[int(backtrack.size()/2) + rng.randi_range(2, 5)]
+					
 			current_cell = next_cell            
 			visited_cells += 1
 			unvisited.erase(next_cell)
@@ -207,7 +253,7 @@ func visualize_navigation_mesh(nav_region: NavigationRegion3D) -> void:
 	# Create a temporary visualization of the navigation mesh
 	var debug_mesh = ImmediateMesh.new()
 	var material = StandardMaterial3D.new()
-	material.albedo_color = Color(0, 1, 0, 0.5)  # Semi-transparent green
+	material.albedo_color = Color(0, 1, 0, 0.5) # Green 50% opacity
 
 	# Add a surface to the ImmediateMesh
 	debug_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES, material)
@@ -289,7 +335,7 @@ func _instantiate_empty_rooms():
 				room_instance.transform.origin = Vector3(x * room_size.x, 15, y * room_size.z)
 			add_child(room_instance)
 	
-
+# Function to place destroyers and turrets on the maze
 func _spawn_enemies():
 	for j in [turret, destroyer]:
 		for i in range(number_of_enemies):
@@ -304,7 +350,7 @@ func _spawn_enemies():
 			if j==destroyer:
 				enemy.set_scale(Vector3(0.3,0.3,0.3))
 			
-			
+# Function to place portals on the maze
 func _place_portals():
 	
 	for i in range((number_of_portal_pairs - 1)):  # one pair will be on the ideal path
@@ -323,14 +369,19 @@ func _place_portals():
 		
 		var instance = portal_pair.instantiate()
 		add_child(instance)
-		#var instance1 = instance.Portal1
-		#var instance2 = instance.Portal2
 		
 		instance.get_node("Portal1").current = true
 		
 		instance.get_node("Portal1").global_transform.origin = Vector3(x * room_size.x + rng.randi_range(0, 5), 3.286, y * room_size.z + rng.randi_range(0, 5))
 		instance.get_node("Portal2").global_transform.origin = Vector3(a * room_size.x + rng.randi_range(0, 5), 3.286, b * room_size.z + rng.randi_range(0, 5))
 		
-		print("Placed portal pair at", instance.get_node("Portal1").global_transform.origin, "and", instance.get_node("Portal2").global_transform.origin)
-
+		#print("Placed portal pair at", instance.get_node("Portal1").global_transform.origin, "and", instance.get_node("Portal2").global_transform.origin)
+	
+	# Place the 'solution portals'
+	var instance = portal_pair.instantiate()
+	add_child(instance)
+	instance.get_node("Portal1").current = true
+	instance.get_node("Portal1").global_transform.origin = Vector3(portalLoc1.x * room_size.x + rng.randi_range(0, 5), 3.286, portalLoc1.y * room_size.z + rng.randi_range(0, 5))
+	instance.get_node("Portal2").global_transform.origin = Vector3(portalLoc2.x * room_size.x + rng.randi_range(0, 5), 3.286, portalLoc2.y * room_size.z + rng.randi_range(0, 5))
+	
 		

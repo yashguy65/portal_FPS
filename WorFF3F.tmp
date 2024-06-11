@@ -226,26 +226,6 @@ fit_content = true
 visible_characters = 14
 visible_ratio = 1.75
 
-[node name="YouLose" type="RichTextLabel" parent="UI"]
-visible = false
-top_level = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 497.0
-offset_top = 259.0
-offset_right = 497.0
-offset_bottom = 549.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/normal_font_size = 40
-text = "YOU LOSE
-"
-fit_content = true
-visible_characters = 14
-visible_ratio = 1.75
-
 [node name="OccluderInstance3D" type="OccluderInstance3D" parent="."]
 occluder = ExtResource("15_if7jw")
 bake_mask = 4293918721

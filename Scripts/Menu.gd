@@ -29,3 +29,10 @@ func _on_controls_pressed():
 		controls.visible = true
 		title.visible = false
 	OptionsPressed = not OptionsPressed
+
+
+func _on_lol_pressed():
+	g.difficulty = 1
+	g.game_journalist = true
+	get_tree().change_scene_to_file("res://World.tscn")
+	
