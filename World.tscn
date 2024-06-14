@@ -10,7 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://d3radhj6uixps" path="res://Textures/Crosshair/crosshair161.png" id="6_wvhx6"]
 [ext_resource type="Script" path="res://Scripts/PortalCamera.gd" id="7_ft6rt"]
 [ext_resource type="PackedScene" uid="uid://cay7ruc864d07" path="res://Scenes/fps_counter.tscn" id="8_3nm1p"]
-[ext_resource type="PackedScene" path="res://Scenes/floor.tscn" id="13_0fc4j"]
+[ext_resource type="PackedScene" uid="uid://cxa7wkh746kpx" path="res://Scenes/floor.tscn" id="13_0fc4j"]
 [ext_resource type="Script" path="res://Scripts/MapMazeGen.gd" id="13_hprkg"]
 [ext_resource type="Texture2D" uid="uid://c1kd8ev4tvcin" path="res://Textures/start.jpeg" id="13_isfgr"]
 [ext_resource type="ArrayOccluder3D" uid="uid://d34l3wnjclrv1" path="res://World.occ" id="15_if7jw"]
